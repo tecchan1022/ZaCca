@@ -1,0 +1,8 @@
+#eccube.event.app.{before | after}
+#eccube.event.controller.{ルーティング名}.{before | after | finish}
+#eccube.event.render.{ルーティング名}.before
+
+eccube.event.controller.shopping_complete.before:
+    - [onControllerShippingCompleteBefore, NORMAL]
+eccube.event.render.shopping_complete.before:
+    - [onRenderShippingCompleteBefore, NORMAL]

@@ -1,0 +1,26 @@
+Plugin\YamatoPayment\Entity\YamatoShippingDelivSlip:
+    type: entity
+    table: plg_yamato_shipping_deliv_slip
+    repositoryClass: Plugin\YamatoPayment\Repository\YamatoShippingDelivSlipRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            column: shipping_id
+    fields:
+        order_id:
+            type: integer
+            nullable: false
+            unsigned: false
+        deliv_slip_number:
+            type: text
+            nullable: true
+        last_deliv_slip_number:
+            type: text
+            nullable: true
+        deliv_slip_url:
+            type: text
+            nullable: true
+    lifecycleCallbacks: {  }

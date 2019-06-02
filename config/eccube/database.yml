@@ -1,0 +1,9 @@
+database:
+    driver: 'pdo_mysql'
+    host: 'ec-dbinstance.cazdxmnnqusz.ap-northeast-1.rds.amazonaws.com'
+    dbname: 'retail_store'
+    port: '3306'
+    user: 'store_admin'
+    password : 'Dk20s9Is2j!a'
+    charset: utf8
+    defaultTableOptions: { collate: utf8_general_ci }

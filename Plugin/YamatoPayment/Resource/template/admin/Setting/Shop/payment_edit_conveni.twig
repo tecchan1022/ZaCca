@@ -1,0 +1,161 @@
+{#
+ Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+ Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+    <style type="text/css">
+        .small {
+            font-size: 80%;
+        }
+
+        .caution {
+            color: #DE5D50;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .warningError {
+            color: #F00;
+        }
+
+        .floatLeft {
+            float: left;
+        }
+    </style>
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">WEBコレクト設定</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">コンビニ選択 <span class='warningError'>*</span></label>
+                <div class="col-sm-10 {% if form.conveni.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.conveni) }}
+                    {{ form_errors(form.conveni) }}
+                    ※ご契約している利用出来るコンビニを選択してください。
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">
+                    セブンイレブン<br>
+                    決済完了案内タイトル
+                </label>
+
+                <div class="col-sm-9 {% if form.order_mail_title_21.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_title_21) }}<span class='caution'>（上限50文字）</span>
+                    {{ form_errors(form.order_mail_title_21) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">
+                    セブンイレブン<br>
+                    決済完了案内本文
+                </label>
+
+                <div class="col-sm-9 {% if form.order_mail_body_21.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_body_21) }}<span class='caution'>（上限1000文字）</span>
+                    {{ form_errors(form.order_mail_body_21) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">
+                    ローソン<br>
+                    決済完了案内タイトル
+                </label>
+
+                <div class="col-sm-9 {% if form.order_mail_title_22.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_title_22) }}<span class='caution'>（上限50文字）</span>
+                    {{ form_errors(form.order_mail_title_22) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">
+                    ローソン<br>
+                    決済完了案内本文
+                </label>
+
+                <div class="col-sm-9 {% if form.order_mail_body_22.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_body_22) }}<span class='caution'>（上限1000文字）</span>
+                    {{ form_errors(form.order_mail_body_22) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">
+                    ファミリーマート<br>
+                    決済完了案内タイトル
+                </label>
+
+                <div class="col-sm-9 {% if form.order_mail_title_23.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_title_23) }}<span class='caution'>（上限50文字）</span>
+                    {{ form_errors(form.order_mail_title_23) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">
+                    ファミリーマート<br>
+                    決済完了案内本文
+                </label>
+
+                <div class="col-sm-9 {% if form.order_mail_body_23.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_body_23) }}<span class='caution'>（上限1000文字）</span>
+                    {{ form_errors(form.order_mail_body_23) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">
+                    セイコーマート<br>
+                    決済完了案内タイトル
+                </label>
+
+                <div class="col-sm-9 {% if form.order_mail_title_24.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_title_24) }}<span class='caution'>（上限50文字）</span>
+                    {{ form_errors(form.order_mail_title_24) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">
+                    セイコーマート<br>
+                    決済完了案内本文
+                </label>
+
+                <div class="col-sm-9 {% if form.order_mail_body_24.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_body_24) }}<span class='caution'>（上限1000文字）</span>
+                    {{ form_errors(form.order_mail_body_24) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">
+                    ミニストップ<br>
+                    決済完了案内タイトル
+                </label>
+
+                <div class="col-sm-9 {% if form.order_mail_title_25.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_title_25) }}<span class='caution'>（上限50文字）</span>
+                    {{ form_errors(form.order_mail_title_25) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">
+                    ミニストップ<br>
+                    決済完了案内本文
+                </label>
+
+                <div class="col-sm-9 {% if form.order_mail_body_25.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_body_25) }}<span class='caution'>（上限1000文字）</span>
+                    {{ form_errors(form.order_mail_body_25) }}
+                </div>
+            </div>
+
+        </div>
+    </div>

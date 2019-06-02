@@ -1,0 +1,44 @@
+Plugin\YamatoPayment\Entity\YamatoOrderPayment:
+    type: entity
+    table: plg_yamato_order_payment
+    repositoryClass: Plugin\YamatoPayment\Repository\YamatoOrderPaymentRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            column: order_id
+    fields:
+        memo01:
+            type: text
+            nullable: true
+        memo02:
+            type: text
+            nullable: true
+        memo03:
+            type: text
+            nullable: true
+        memo04:
+            type: text
+            nullable: true
+        memo05:
+            type: text
+            nullable: true
+        memo06:
+            type: text
+            nullable: true
+        memo07:
+            type: text
+            nullable: true
+        memo08:
+            type: text
+            nullable: true
+        memo09:
+            type: text
+            nullable: true
+        memo10:
+            type: text
+            nullable: true
+
+    lifecycleCallbacks: {  }

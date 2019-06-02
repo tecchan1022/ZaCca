@@ -1,0 +1,5 @@
+mailcatcher:
+    transport: smtp
+    host: 127.0.0.1
+    port: 1025
+    url: http://127.0.0.1:1080/

@@ -1,0 +1,363 @@
+name: クロネコヤマト カード・後払い一体型決済モジュール
+event: YamatoPaymentEvent
+code: YamatoPayment
+version: 1.1.3
+service: 
+    - PaymentServiceProvider
+const: 
+    PaymentUtil: true
+
+    YAMATO_SERVICE_NAME: ネット総合決済サービス
+
+    #決済通信タイムアウト値
+    YAMATO_API_HTTP_TIMEOUT: 20
+
+    # 決済受信処理のIPアドレス制限
+    RECV_ALLOW_HOST:
+        - 127.0.0.1       # for phpunit
+        - 192.168.56.1    # for virtualbox
+        - 218.40.0.72     # for production
+
+    # 支払方法 種別ID
+    YAMATO_PAYID_CREDIT: 10         # クレジット支払ID
+    YAMATO_PAYID_CVS: 30            # コンビニ支払ID
+    YAMATO_PAYID_EDY: 42            # Edy支払ID
+    YAMATO_PAYID_MOBILEEDY: 43      # モバイルEdy支払ID
+    YAMATO_PAYID_SUICA: 44          # SUICA支払ID
+    YAMATO_PAYID_MOBILESUICA: 45    # モバイルSUICA支払ID
+    YAMATO_PAYID_WAON: 46           # WAON支払ID
+    YAMATO_PAYID_MOBILEWAON: 47     # モバイルWAON支払ID
+    YAMATO_PAYID_NETBANK: 52        # ネットバンク支払ID
+    YAMATO_PAYID_DEFERRED: 60       # クロネコ代金後払い
+
+    # 決済ステータス
+    YAMATO_ACTION_STATUS_SEND_REQUEST: 0           # 決済依頼済み
+    YAMATO_ACTION_STATUS_COMP_REQUEST: 1           # 決済申込完了
+    YAMATO_ACTION_STATUS_PROMPT_REPORT: 2          # 入金完了（速報）
+    YAMATO_ACTION_STATUS_DIFINIT_REPORT: 3         # 入金完了（確報）
+    YAMATO_ACTION_STATUS_COMP_AUTH: 4              # 与信完了
+    YAMATO_ACTION_STATUS_COMP_RESERVE: 5           # 予約受付完了
+    YAMATO_ACTION_STATUS_NG_CUSTOMER: 11           # 購入者都合エラー
+    YAMATO_ACTION_STATUS_NG_SHOP: 12               # 加盟店都合エラー
+    YAMATO_ACTION_STATUS_NG_PAYMENT: 13            # 決済機関都合エラー
+    YAMATO_ACTION_STATUS_NG_SYSTEM: 14             # その他システムエラー
+    YAMATO_ACTION_STATUS_NG_RESERVE: 15            # 予約販売与信エラー
+    YAMATO_ACTION_STATUS_NG_REQUEST_CANCEL: 16     # 決済依頼取消エラー
+    YAMATO_ACTION_STATUS_NG_CHANGE_PAYMENT: 17     # 金額変更NG
+    YAMATO_ACTION_STATUS_NG_TRANSACTION: 20        # 決済中断
+    YAMATO_ACTION_STATUS_WAIT: 21                  # 決済手続き中
+    YAMATO_ACTION_STATUS_WAIT_SETTLEMENT: 30       # 精算確定待ち
+    YAMATO_ACTION_STATUS_COMMIT_SETTLEMENT: 31     # 精算確定
+    YAMATO_ACTION_STATUS_CANCEL: 40                # 取消
+    YAMATO_ACTION_STATUS_3D_WAIT: 50               # 3Dセキュア認証中
+
+    # クロネコ代金後払い用決済ステータス
+    DEFERRED_STATUS_AUTH_OK: 1              # 承認済み
+    DEFERRED_STATUS_AUTH_CANCEL: 2          # 取消済み
+    DEFERRED_STATUS_REGIST_DELIV_SLIP: 3    # 送り状番号登録済み
+    DEFERRED_STATUS_RESEARCH_DELIV: 5       # 配送要調査
+    DEFERRED_STATUS_SEND_WARNING: 6         # 警報メール送信済み
+    DEFERRED_STATUS_SALES_OK: 10            # 売上確定
+    DEFERRED_STATUS_SEND_BILL: 11           # 請求書発行済み
+    DEFERRED_STATUS_PAID: 12                # 入金済み
+
+    # クロネコ代金後払い用審査結果
+    DEFERRED_AVAILABLE: 0                   # ご利用可
+    DEFERRED_NOT_AVAILABLE: 1               # ご利用不可
+    DEFERRED_OVER_LIMIT: 2                  # 限度額超過
+    DEFERRED_UNDER_EXAM: 3                  # 審査中
+
+    # クロネコ代金後払い 請求書再発行APIご依頼内容
+    DEFERRED_INVOICE_REISSUE: 1             # 請求内容変更・請求書再発行
+    DEFERRED_INVOICE_REISSUE_WITHDRAWN: 3 # 請求書再発行取下げ
+
+    # 注文ステータス関連
+    ORDER_SHIPPING_REGISTERED: 9625        # クレジットカード出荷登録済み
+
+    # 配送完了メール関連
+    DELIV_COMPLETE_MAIL_ID: 9625           # 配送完了メールID
+
+    # 後払い用追跡URL
+    DEFERRED_DELIV_SLIP_URL: http://toi.kuronekoyamato.co.jp/cgi-bin/tneko
+
+    # 支払方法名
+    YAMATO_PAYNAME_CREDIT: クレジットカード決済
+    YAMATO_PAYNAME_CVS: コンビニ決済
+    YAMATO_PAYNAME_DEFERRED: クロネコ代金後払い決済
+    
+    # 支払方法コード
+    YAMATO_PAYCODE_CREDIT: Credit
+    YAMATO_PAYCODE_CVS: CVS
+    YAMATO_PAYCODE_DEFERRED: Deferred
+
+    # 支払方法 - 手数料
+    DEFERRED_SEND_DELIV_CHARGE: 100         # 請求書同梱あり
+    DEFERRED_CHARGE: 190                    # 請求書同梱なし
+
+    # クレジットカード決済手段
+    CREDIT_METHOD_UC: 1             # UC
+    CREDIT_METHOD_DINERS: 2         # ダイナース
+    CREDIT_METHOD_JCB: 3            # JCB
+    CREDIT_METHOD_DC: 4             # DC
+    CREDIT_METHOD_MITSUISUMITOMO: 5 # 三井住友クレジット
+    CREDIT_METHOD_UFJ: 6            # UFJ
+    CREDIT_METHOD_SAISON: 7         # クレディセゾン
+    CREDIT_METHOD_NICOS: 8          # NICOS
+    CREDIT_METHOD_VISA: 9           # VISA
+    CREDIT_METHOD_MASTER: 10        # MASTER
+    CREDIT_METHOD_AEON: 11          # イオンクレジット
+    CREDIT_METHOD_AMEX: 12          # アメックス
+    CREDIT_METHOD_TOP: 13           # TOP＆カード
+    CREDIT_METHOD_OTHER: 99         # その他
+
+    # コンビニ情報
+    CONVENI_ID_SEVENELEVEN: 21
+    CONVENI_ID_LAWSON: 22
+    CONVENI_ID_FAMILYMART: 23
+    CONVENI_ID_SEICOMART: 24
+    CONVENI_ID_MINISTOP: 25
+    CONVENI_ID_CIRCLEK: 26
+
+    CONVENI_NAME_SEVENELEVEN: セブンイレブン
+    CONVENI_NAME_LAWSON: ローソン
+    CONVENI_NAME_FAMILYMART: ファミリーマート
+    CONVENI_NAME_SEICOMART: セイコーマート
+    CONVENI_NAME_MINISTOP: ミニストップ
+    CONVENI_NAME_CIRCLEK: サークルKサンクス
+
+    CONVENI_FUNCTION_DIV_21: B01
+    CONVENI_FUNCTION_DIV_22: B03
+    CONVENI_FUNCTION_DIV_23: B02
+    CONVENI_FUNCTION_DIV_24: B06
+    CONVENI_FUNCTION_DIV_25: B05
+    CONVENI_FUNCTION_DIV_26: B04
+
+    # 電子マネー決済手段
+    EMONEY_METHOD_RAKUTENEDY: 61    # 楽天Edy
+    EMONEY_METHOD_M_RAKUTENEDY: 62  # 楽天モバイルEdy
+    EMONEY_METHOD_SUICA: 63         # Suica
+    EMONEY_METHOD_M_SUICA: 64       # モバイルSuica
+    EMONEY_METHOD_WAON: 65          # WAON
+    EMONEY_METHOD_M_WAON: 66        # モバイルWAON
+
+    EMONEY_NAME_RAKUTENEDY: 楽天Edy決済
+    EMONEY_NAME_M_RAKUTENEDY: 楽天モバイルEdy決済
+    EMONEY_NAME_SUICA: Suica決済
+    EMONEY_NAME_M_SUICA: モバイルSuica決済
+    EMONEY_NAME_WAON: WAON決済
+    EMONEY_NAME_M_WAON: モバイルWAON決済
+
+    # ネットバンク決済手段
+    NETBANK_METHOD_RAKUTENBANK: 41  # 楽天銀行
+
+    # マスタ：タイムコード
+    DELIV_TIMECODE:
+        0: ''
+        1: '0812'
+        2: '1214'
+        3: '1416'
+        4: '1618'
+        5: '1820'
+        9: '1921'
+        6: '2021'
+        7: '0010'
+        8: '0017'
+
+    # 廃止になるタイムコード
+    DELETE_DELIV_TIMECODE:
+        2: '1214'
+        6: '2021'
+
+    # マスタ：送り状種別
+    DELIV_SLIP_TYPE_CORECT: 2
+    DELIV_SLIP_TYPE_NEKOPOS: 7
+
+    # カード登録上限数
+    CREDIT_SAVE_LIMIT: 3
+    
+
+    # プラグインステータス（有効・無効）
+    YAMATO_ENABLE_PAYMENT_VALUE: 0
+    YAMATO_DISABLE_PAYMENT_VALUE: 1
+
+    # 出荷情報登録関連
+    # 1注文に対する配送先上限数
+    YAMATO_DELIV_ADDR_MAX: 99
+    # 1送り状に対する登録可能受注番号件数（同梱件数）
+    YAMATO_SHIPPED_MAX: 3
+    
+    # 1注文に対する配送先上限件数
+    DEFERRED_DELIV_ADDR_MAX: 10
+
+    #################################
+    # 予約販売商品関連
+    #################################
+    # 商品種別ID(リンクタイプに合わせる)
+    PRODUCT_TYPE_ID_RESERVE: 9625
+    # 予約販売再与信期限(再与信日を含む10日前のため9で設定)
+    YAMATO_DEADLINE_RECREDIT: 9
+
+    #################################
+    # 3Dセキュア関連
+    #################################
+    # 加盟店ECサイトURL
+    YAMATO_TRADER_URL: shopping/load_payment_module.php?mode=3dTran
+    # 3Dセキュア認証対象外エラーコード
+    YAMATO_3D_EXCLUDED: A012050002
+
+    #################################
+    # 入力パラメータ桁数
+    #################################
+    # カード番号桁数
+    CREDIT_NO_LEN: 16
+    # セキュリティコード最小桁数
+    SECURITY_CODE_MIN_LEN: 3
+    # セキュリティコード最大桁数
+    SECURITY_CODE_MAX_LEN: 4
+    # カード名義桁数
+    CARD_ORNER_LEN: 20
+    # 商品名桁数
+    ITEM_NAME_LEN: 200
+
+    #################################
+    # 決済API
+    #################################
+
+    api.name:
+        A01: クレジット決済登録通常用
+        A02: クレジット決済登録３Ｄセキュア結果用
+        A03: クレジットカードのお預かり情報照会
+        A04: クレジットカードのお預かり情報変更
+        A05: クレジットカードのお預かり情報削除
+        A06: クレジット決済取消
+        A07: クレジット金額変更
+        A08: クレジット決済登録通常用(トークン)
+        A09: クレジット決済登録３Ｄセキュア結果用(トークン)
+        A11: クレジット再与信
+        B01: コンビニ（オンライン払い）セブン-イレブン
+        B02: コンビニ（オンライン払い）ファミリーマート
+        B03: コンビニ（オンライン払い）ローソン
+        B04: コンビニ（オンライン払い）サークルＫサンクス
+        B05: コンビニ（オンライン払い）ミニストップ
+        B06: コンビニ（オンライン払い）セイコーマート
+        C01: 電子マネー決済登録(楽天Edy(Cyber))
+        C02: 電子マネー決済登録(楽天Edy(Mobile))
+        C03: 電子マネー決済登録(Suica(インターネットサービス))
+        C04: 電子マネー決済登録(Suica(Mobile))
+        C05: 電子マネー決済登録(Waon(PC))
+        C06: 電子マネー決済登録(Waon(MB))
+        D01: ネットバンク決済登録（楽天銀行）
+        E01: 出荷情報登録
+        E02: 出荷情報取消
+        E03: 出荷予定日変更
+        E04: 取引情報照会
+        F01: 接続元加盟店ECサーバ認証
+        F02: 出荷情報登録（切売）
+        F03: 出荷情報取消（切売）
+        F04: 取引情報照会（切売）
+        H01: グローバルＩＰアドレス照会
+        KAAAU0010APIAction: 後払い与信依頼
+        KAARS0010APIAction: 後払い与信結果取得
+        KAASL0010APIAction: 後払い出荷情報登録
+        KAAST0010APIAction: 後払い取引状況取得
+        KAACL0010APIAction: 後払い与信取消依頼
+        KAASD0010APIAction: 後払い請求書印字データ取得
+        KAARA0010APIAction: 後払いリアルタイムオーソリ
+        KAAKK0010APIAction: 後払い金額変更(減額)
+        KAARR0010APIAction: 後払い請求書再発行
+
+    api.url:
+        A01: https://api.kuronekoyamato.co.jp/api/credit
+        A02: https://api.kuronekoyamato.co.jp/api/credit3D
+        A03: https://api.kuronekoyamato.co.jp/api/creditInfoGet
+        A04: https://api.kuronekoyamato.co.jp/api/creditInfoUpdate
+        A05: https://api.kuronekoyamato.co.jp/api/creditInfoDelete
+        A06: https://api.kuronekoyamato.co.jp/api/creditCancel
+        A07: https://api.kuronekoyamato.co.jp/api/creditChangePrice
+        A08: https://api.kuronekoyamato.co.jp/api/creditToken
+        A09: https://api.kuronekoyamato.co.jp/api/creditToken3D
+        A11: https://api.kuronekoyamato.co.jp/api/reAuth
+        B01: https://api.kuronekoyamato.co.jp/api/cvs1
+        B02: https://api.kuronekoyamato.co.jp/api/cvs2
+        B03: https://api.kuronekoyamato.co.jp/api/cvs3
+        B04: https://api.kuronekoyamato.co.jp/api/cvs3
+        B05: https://api.kuronekoyamato.co.jp/api/cvs3
+        B06: https://api.kuronekoyamato.co.jp/api/cvs3
+        C01: https://api.kuronekoyamato.co.jp/api/e_money1
+        C02: https://api.kuronekoyamato.co.jp/api/e_money2
+        C03: https://api.kuronekoyamato.co.jp/api/e_money3
+        C04: https://api.kuronekoyamato.co.jp/api/e_money4
+        C05: https://api.kuronekoyamato.co.jp/api/e_money5
+        C06: https://api.kuronekoyamato.co.jp/api/e_money6
+        D01: https://api.kuronekoyamato.co.jp/api/bank1
+        E01: https://api.kuronekoyamato.co.jp/api/shipmentEntry
+        E02: https://api.kuronekoyamato.co.jp/api/shipmentCancel
+        E03: https://api.kuronekoyamato.co.jp/api/changeDate
+        E04: https://api.kuronekoyamato.co.jp/api/tradeInfo
+        F01: https://apixp.kuronekoyamato.co.jp/api/xp/authXp
+        F02: https://apixp.kuronekoyamato.co.jp/api/xp/shipmentEntryXp
+        F03: https://apixp.kuronekoyamato.co.jp/api/xp/shipmentCancelXp
+        F04: https://apixp.kuronekoyamato.co.jp/api/xp/tradeInfoXp
+        H01: https://ptwebcollect.jp/test_gateway/traderIp.api
+        KAAAU0010APIAction: https://yamato-credit-finance.jp/kuroneko-atobarai-api/KAAAU0010APIAction_execute.action
+        KAARS0010APIAction: https://yamato-credit-finance.jp/kuroneko-atobarai-api/KAARS0010APIAction_execute.action
+        KAASL0010APIAction: https://yamato-credit-finance.jp/kuroneko-atobarai-api/KAASL0010APIAction_execute.action
+        KAAST0010APIAction: https://yamato-credit-finance.jp/kuroneko-atobarai-api/KAAST0010APIAction_execute.action
+        KAACL0010APIAction: https://yamato-credit-finance.jp/kuroneko-atobarai-api/KAACL0010APIAction_execute.action
+        KAASD0010APIAction: https://yamato-credit-finance.jp/kuroneko-atobarai-api/KAASD0010APIAction_execute.action
+        KAARA0010APIAction: https://yamato-credit-finance.jp/kuroneko-atobarai-api/KAARA0010APIAction_execute.action
+        KAAKK0010APIAction: https://yamato-credit-finance.jp/kuroneko-atobarai-api/KAAKK0010APIAction_execute.action
+        KAARR0010APIAction: https://yamato-credit-finance.jp/kuroneko-atobarai-api/KAARR0010APIAction_execute.action
+
+    api.test.gateway:
+        A01: https://ptwebcollect.jp/test_gateway/credit.api
+        A02: https://ptwebcollect.jp/test_gateway/credit3D.api
+        A03: https://ptwebcollect.jp/test_gateway/creditInfoGet.api
+        A04: https://ptwebcollect.jp/test_gateway/creditInfoUpdate.api
+        A05: https://ptwebcollect.jp/test_gateway/creditInfoDelete.api
+        A06: https://ptwebcollect.jp/test_gateway/creditCancel.api
+        A07: https://ptwebcollect.jp/test_gateway/creditChangePrice.api
+        A08: https://ptwebcollect.jp/test_gateway/creditToken.api
+        A09: https://ptwebcollect.jp/test_gateway/creditToken3D.api
+        A11: https://ptwebcollect.jp/test_gateway/reAuth.api
+        B01: https://ptwebcollect.jp/test_gateway/cvs1.api
+        B02: https://ptwebcollect.jp/test_gateway/cvs2.api
+        B03: https://ptwebcollect.jp/test_gateway/cvs3.api
+        B04: https://ptwebcollect.jp/test_gateway/cvs3.api
+        B05: https://ptwebcollect.jp/test_gateway/cvs3.api
+        B06: https://ptwebcollect.jp/test_gateway/cvs3.api
+        C01: https://ptwebcollect.jp/test_gateway/e_money1.api
+        C02: https://ptwebcollect.jp/test_gateway/e_money2.api
+        C03: https://ptwebcollect.jp/test_gateway/e_money3.api
+        C04: https://ptwebcollect.jp/test_gateway/e_money4.api
+        C05: https://ptwebcollect.jp/test_gateway/e_money5.api
+        C06: https://ptwebcollect.jp/test_gateway/e_money6.api
+        D01: https://ptwebcollect.jp/test_gateway/bank1.api
+        E01: https://ptwebcollect.jp/test_gateway/shipmentEntry.api
+        E02: https://ptwebcollect.jp/test_gateway/shipmentCancel.api
+        E03: https://ptwebcollect.jp/test_gateway/changeDate.api
+        E04: https://ptwebcollect.jp/test_gateway/tradeInfo.api
+        F01: https://ptwebcollect.jp/test_gateway/xp/authXp.api
+        F02: https://ptwebcollect.jp/test_gateway/xp/shipmentEntryXp.api
+        F03: https://ptwebcollect.jp/test_gateway/xp/shipmentCancelXp.api
+        F04: https://ptwebcollect.jp/test_gateway/xp/tradeInfoXp.api
+        H01: https://ptwebcollect.jp/test_gateway/traderIp.api
+        KAAAU0010APIAction: http://demo.yamato-credit-finance.jp/kuroneko-atobarai-api/KAAAU0010APIAction_execute.action
+        KAARS0010APIAction: http://demo.yamato-credit-finance.jp/kuroneko-atobarai-api/KAARS0010APIAction_execute.action
+        KAASL0010APIAction: http://demo.yamato-credit-finance.jp/kuroneko-atobarai-api/KAASL0010APIAction_execute.action
+        KAAST0010APIAction: http://demo.yamato-credit-finance.jp/kuroneko-atobarai-api/KAAST0010APIAction_execute.action
+        KAACL0010APIAction: http://demo.yamato-credit-finance.jp/kuroneko-atobarai-api/KAACL0010APIAction_execute.action
+        KAASD0010APIAction: http://demo.yamato-credit-finance.jp/kuroneko-atobarai-api/KAASD0010APIAction_execute.action
+        KAARA0010APIAction: http://demo.yamato-credit-finance.jp/kuroneko-atobarai-api/KAARA0010APIAction_execute.action
+        KAAKK0010APIAction: http://demo.yamato-credit-finance.jp/kuroneko-atobarai-api/KAAKK0010APIAction_execute.action
+        KAARR0010APIAction: http://demo.yamato-credit-finance.jp/kuroneko-atobarai-api/KAARR0010APIAction_execute.action
+
+    TOKEN_URL_1: https://api.kuronekoyamato.co.jp/api/token/js/embeddedTokenLib.js
+    TOKEN_URL_0: https://ptwebcollect.jp/test_gateway/token/js/embeddedTokenLib.js
+    USE_SECURITY_CODE: 1
+
+    YAMATO_MULTI_ATACK_PERMIT_COUNT: 5
+    YAMATO_MULTI_ATACK_WAIT: 5
+
+orm.path:
+    - /Resource/doctrine

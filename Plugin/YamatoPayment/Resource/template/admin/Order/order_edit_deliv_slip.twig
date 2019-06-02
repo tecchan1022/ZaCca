@@ -1,0 +1,19 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+<div id="shipment_item_detail__deliv_slip--{{ loop.index }}" class="form-group">
+    {% if form.YamatoShippings[shippingIndex] is defined %}
+        {{ form_label(form.YamatoShippings[shippingIndex].deliv_slip_number) }}
+        <div class="col-sm-9 col-lg-10">
+            {{ form_widget(form.YamatoShippings[shippingIndex].deliv_slip_number) }}
+            {{ form_errors(form.YamatoShippings[shippingIndex].deliv_slip_number) }}
+        </div>
+    {% else %}
+        {# お届け先追加時 #}
+        <label class="col-sm-2 control-label" for="order_YamatoShippings_{{ shippingIndex }}_deliv_slip_number">送り状番号</label>
+        <div class="col-sm-9 col-lg-10">
+            <input type="text" id="order_YamatoShippings_{{ shippingIndex }}_deliv_slip_number" name="order[YamatoShippings][{{ shippingIndex }}][deliv_slip_number]" maxlength="12" class="form-control">
+        </div>
+    {% endif %}
+</div>

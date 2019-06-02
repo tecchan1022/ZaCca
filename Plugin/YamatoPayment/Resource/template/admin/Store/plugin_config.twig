@@ -1,0 +1,268 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+{% extends 'default_frame.twig' %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block title %}{{ tpl_subtitle }}{% endblock %}
+
+{% form_theme form 'Form/bootstrap_3_horizontal_layout.html.twig' %}
+{% block main %}
+
+    <div class="row" id="aside_wrap">
+        <form name="form1" role="form" novalidate class="form-horizontal" id="point_form" method="post" action="">
+            <input type="hidden" name="mode" id="mode" value="" />
+            {{ form_widget(form._token) }}
+            <div class="col-md-9">
+
+                <div class="box">
+                    <div class="box-body">
+                        <div>
+                            クロネコｗｅｂコレクトをご利用いただく場合は、ヤマトフィナンシャル株式会社とご契約いただく必要がございます。</br>
+                            クロネコ代金後払いをご利用いただく場合は、ヤマトクレジットファイナンス株式会社とご契約いただく必要がございます。</br>
+                            <span><a href="https://www.yamatofinancial.jp/wc/index.html" target="_blank">
+                                    <button type="button" class="btn btn-default btn-sm" style="margin-bottom:10px; width:330px">
+                                        クロネコｗｅｂコレクトのご契約をご希望の場合
+                                    </button>
+                                </a></span>
+                            <span><a href="http://www.yamato-credit-finance.co.jp/service/deferred.html" target="_blank">
+                                    <button type="button" class="btn btn-default btn-sm" style="margin-bottom:10px; width:330px">
+                                        クロネコ代金後払いのご契約をご希望の場合
+                                    </button>
+                                </a></span>
+                            <span><a href="{{ path( 'plugin_YamatoPayment_report')}}" target="_blank">
+                                    <button type="button" class="btn btn-default btn-sm" style="margin-bottom:10px; width:330px">
+                                        レポート出力
+                                    </button>
+                                </a></span>
+                            <span><a href="{{ url('plugin_YamatoPayment_b2_config') }}" target="_blank">
+                                    <button type="button" class="btn btn-default btn-sm" style="margin-bottom:10px; width:330px">
+                                        B2設定
+                                    </button>
+                                </a></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">基本設定</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required ">動作モード<span class="text-danger"> *</span></label>
+                            <div class="col-sm-9 {% if form.exec_mode.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.exec_mode) }}
+                                {{ form_errors(form.exec_mode) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required">有効にする決済方法<span class="text-danger"> *</span></label>
+                            <div class="col-sm-9 {% if form.enable_payment_type.vars.errors is not empty %}has-error{% endif %}" style="display: block">
+                                {{ form_widget(form.enable_payment_type) }}
+                                {{ form_errors(form.enable_payment_type) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">クロネコｗｅｂコレクト設定</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required">クロネコｗｅｂコレクト加盟店コード</label>
+                            <div class="col-sm-6 {% if form.shop_id.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.shop_id) }}
+                                {{ form_errors(form.shop_id) }}
+                            </div>
+                            <label class="col-sm-3 control-label required">(半角数字 9 桁)</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required">アクセスキー</label>
+                            <div class="col-sm-6 {% if form.access_key.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.access_key) }}
+                                {{ form_errors(form.access_key) }}
+                            </div>
+                            <label class="col-sm-3 control-label required">(半角数字 7 桁)</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required">オプションサービス</label>
+                            <div class="col-sm-6 {% if form.use_option.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.use_option) }}
+                                {{ form_errors(form.use_option) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-9">
+                                以下はオプションサービスをご利用の方のみご入力ください。
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required ">予約販売機能</label>
+                            <div class="col-sm-9 {% if form.advance_sale.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.advance_sale) }}
+                                {{ form_errors(form.advance_sale) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">クロネコ代金後払い設定</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required">クロネコ代金後払い加盟店コード</label>
+                            <div class="col-sm-9" style="padding-left: 0px; padding-right: 0px">
+                                <div class="col-sm-8 {% if form.ycf_str_code.vars.errors is not empty %}has-error{% endif %}">
+                                    {{ form_widget(form.ycf_str_code) }}
+                                    {{ form_errors(form.ycf_str_code) }}
+                                </div>
+                                <label class="col-sm-4 control-label required">(半角数字 11 桁)</label>
+                                <br/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required">パスワード</label>
+                            <div class="col-sm-9" style="padding-left: 0px; padding-right: 0px">
+                                <div class="col-sm-8 {% if form.ycf_str_password.vars.errors is not empty %}has-error{% endif %}">
+                                    {{ form_widget(form.ycf_str_password) }}
+                                    {{ form_errors(form.ycf_str_password) }}
+                                </div>
+                                <label class="col-sm-4 control-label required">(半角英数字 8 桁)</label>
+                                <br/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required ">請求書の同梱</label>
+                            <div class="col-sm-9 {% if form.ycf_send_div.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.ycf_send_div) }}
+                                {{ form_errors(form.ycf_send_div) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required">出荷予定日</label>
+                            <div class="col-sm-9" style="padding-left: 0px; padding-right: 0px">
+                                <div class="col-sm-8 {% if form.ycf_ship_ymd.vars.errors is not empty %}has-error{% endif %}">
+                                    {{ form_widget(form.ycf_ship_ymd) }}
+                                    {{ form_errors(form.ycf_ship_ymd) }}
+                                </div>
+                                <label class="col-sm-4 control-label required">(半角数字 2 桁)</label>
+                                <br/>
+                                <label class="col-sm-12 control-label required">
+                                    当該日を経過して伝票番号が未登録の場合に「受注日＋出荷予定日」という設定でアラートを表示します。
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required ">メールの追跡情報表示機能</label>
+                            <div class="col-sm-9 {% if form.ycf_deliv_disp.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.ycf_deliv_disp) }}
+                                {{ form_errors(form.ycf_deliv_disp) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required">請求書再発行通知メール：受取メールアドレス</label>
+                            <div class="col-sm-9" style="padding-left: 0px; padding-right: 0px">
+                                <div class="col-sm-8 {% if form.ycf_invoice_reissue_mail_address.vars.errors is not empty %}has-error{% endif %}">
+                                    {{ form_widget(form.ycf_invoice_reissue_mail_address) }}
+                                    {{ form_errors(form.ycf_invoice_reissue_mail_address) }}
+                                </div>
+                                <label class="col-sm-12 control-label required">
+                                    請求書再発行時に通知メールを送信するアドレスを設定してください。
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required">請求書再発行通知メール：メールヘッダー</label>
+                            <div class="col-sm-9" style="padding-left: 0px; padding-right: 0px">
+                                <div class="col-sm-8 {% if form.ycf_invoice_reissue_mail_header.vars.errors is not empty %}has-error{% endif %}">
+                                    {{ form_widget(form.ycf_invoice_reissue_mail_header) }}
+                                    {{ form_errors(form.ycf_invoice_reissue_mail_header) }}
+                                </div>
+                                <label class="col-sm-12 control-label required">
+                                    請求書再発行時の通知メールのヘッダーを設定してください。
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required">請求書再発行通知メール：メールフッター</label>
+                            <div class="col-sm-9" style="padding-left: 0px; padding-right: 0px">
+                                <div class="col-sm-8 {% if form.ycf_invoice_reissue_mail_footer.vars.errors is not empty %}has-error{% endif %}">
+                                    {{ form_widget(form.ycf_invoice_reissue_mail_footer) }}
+                                    {{ form_errors(form.ycf_invoice_reissue_mail_footer) }}
+                                </div>
+                                <label class="col-sm-12 control-label required">
+                                    請求書再発行時の通知メールのフッターを設定してください。
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">その他の情報</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required ">他社配送設定<span class="text-danger"> *</span></label>
+                            <div class="col-sm-9 {% if form.delivery_service_code.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.delivery_service_code) }}
+                                {{ form_errors(form.delivery_service_code) }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required">結果通知プログラムURL</label>
+                            <div class="col-sm-9">
+                                <p>{{ recv_url }}</p>
+                                <p>
+                                    クロネコｗｅｂコレクト画面よりログイン頂き、「加盟店情報・動作環境設定」＞決済結果データ
+                                    受信設定で「ＰＯＳＴで受信する」を選択後、決済結果受取ＵＲＬに設定してください。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label required">グローバルIPアドレス
+                            
+                            </label>
+                            <div class="col-sm-9">
+                                <p>{{ grobal_ip_adress }}
+                                <button type="submit" class="btn btn-default btn-sm" onClick="$('#mode').val('getGID');" >チェック</button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="common_box" class="col-md-3">
+                <div class="col_inner" id="aside_column">
+                    <div id="common_button_box" class="box no-header">
+                        <div id="common_button_box__body" class="box-body">
+                            <div id="common_button_box__insert_button" class="row text-center">
+                                <div class="col-sm-6 col-sm-offset-3 col-md-12 col-md-offset-0">
+                                    <button type="submit" class="btn btn-primary btn-block btn-lg prevention-btn prevention-mask" >この内容で登録する</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+{% endblock %}

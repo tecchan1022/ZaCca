@@ -1,0 +1,25 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+<style type="text/css">
+    #deliveradd_input_box__payment_message .heading02 {
+        margin-top: 24px;
+        font-weight: bold;
+        background: #EFEFEF;
+        padding: 8px 12px;
+    }
+</style>
+
+<div id="deliveradd_input_box__payment_message" class="complete_message">
+    <h2 class="heading02">■ {{ listOther.title.name }}情報</h2>
+</div>
+<div id="payment_detail_area" style="text-align: left">
+    <ul>
+        {% for key,item in listOther %}
+            {% if key != "title" %}
+                {% if item.name != "" %}<li class="item_name text-default">{{ item.name|nl2br }}：{% endif %}{{ item.value|nl2br }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>

@@ -1,0 +1,17 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+{% if paymentData.title is defined and paymentData.title.value %}
+************************************************
+　{{ paymentData.title.name }}情報
+************************************************
+
+{% for key,item in paymentData %}
+{% if key != "title" %}
+{% if item.name != "" %}{{ item.name }}：{% endif %}{{ item.value }}
+{% endif %}
+{% endfor %}
+
+
+{% endif %}

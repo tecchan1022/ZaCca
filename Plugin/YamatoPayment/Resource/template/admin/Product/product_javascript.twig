@@ -1,0 +1,18 @@
+{#
+ Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+ Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+<script src="{{ app.config.admin_urlpath }}/assets/js/vendor/moment.min.js"></script>
+<script src="{{ app.config.admin_urlpath }}/assets/js/vendor/moment-ja.js"></script>
+<script src="{{ app.config.admin_urlpath }}/assets/js/vendor/bootstrap-datetimepicker.min.js"></script>
+<script>
+$(function() {
+
+    $('#admin_product_reserve_date').datetimepicker({
+        locale: 'ja',
+        format: 'YYYYMMDD',
+        useCurrent: false,
+        showTodayButton: true
+    });
+});
+</script>

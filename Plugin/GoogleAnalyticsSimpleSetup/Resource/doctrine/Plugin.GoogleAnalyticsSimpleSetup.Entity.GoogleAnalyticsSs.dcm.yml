@@ -1,0 +1,47 @@
+Plugin\GoogleAnalyticsSimpleSetup\Entity\GoogleAnalyticsSs:
+    type: entity
+    table: dtb_google_analytics_ss
+    repositoryClass: Plugin\GoogleAnalyticsSimpleSetup\Repository\GoogleAnalyticsSsRepository
+    id:
+        pluginId:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            column: plugin_id
+            generator:
+                strategy: SEQUENCE
+    fields:
+        pluginCode:
+            type: text
+            nullable: false
+            length: null
+            fixed: false
+            column: plugin_code
+        pluginName:
+            type: text
+            nullable: false
+            length: null
+            fixed: false
+            column: plugin_name
+        configData:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            column: config_data
+        delFlg:
+            type: smallint
+            nullable: false
+            unsigned: false
+            default: '0'
+            column: del_flg
+        createDate:
+            type: datetime
+            nullable: false
+            column: create_date
+        updateDate:
+            type: datetime
+            nullable: false
+            column: update_date
+    lifecycleCallbacks: {  }

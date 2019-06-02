@@ -1,0 +1,32 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+<link rel="stylesheet" href="{{ app.config.admin_urlpath }}/assets/css/bootstrap-datetimepicker.min.css">
+<script src="{{ app.config.admin_urlpath }}/assets/js/vendor/moment.min.js"></script>
+<script src="{{ app.config.admin_urlpath }}/assets/js/vendor/moment-ja.js"></script>
+<script src="{{ app.config.admin_urlpath }}/assets/js/vendor/bootstrap-datetimepicker.min.js"></script>
+<script>
+$(function() {
+
+    $('#order_scheduled_shipping_date').datetimepicker({
+        locale: 'ja',
+        format: 'YYYYMMDD',
+        useCurrent: false,
+        showTodayButton: true
+    });
+
+    // 支払い方法の制御（ヤマト決済の場合、変更不可）
+//    $("#order_Payment")
+//        .attr("disabled", "disabled")
+//        .after("<input type='hidden' name='order[Payment]' id='{{ form.Payment.vars.id }}' value='{{ form.Payment.vars.value }}' />");
+
+    // 後払い決済 かつ 取引状況：取消済み の場合
+    {% if yamato_payid == appConst.YAMATO_PAYID_DEFERRED and orderExtGetPaymentStatus == appConst.DEFERRED_STATUS_AUTH_CANCEL %}
+        // 商品追加・削除ボタンを無効にする
+        $('a[data-target=#searchProductModal]').addClass('disabled');
+        $('button.delete-item').hide();
+    {% endif %}
+
+});
+</script>

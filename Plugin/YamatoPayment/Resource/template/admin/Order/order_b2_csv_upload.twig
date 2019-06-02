@@ -1,0 +1,164 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+{% extends  'default_frame.twig' %}
+
+{% set menus = ['order', 'yamato_order_b2_csv_upload'] %}
+
+{% block title %}受注管理{% endblock %}
+{% block sub_title %}送り状番号登録{% endblock %}
+
+{% form_theme form 'Form/bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block javascript %}
+<script type="text/javascript">
+</script>
+<script src="{{ app.config.admin_urlpath }}/assets/js/vendor/spin.min.js"></script>
+<script>
+$(function() {
+
+    var opts = {
+        lines: 13,
+        length: 30,
+        width: 2,
+        radius: 12,
+        corners: 1,
+        rotate: 0,
+        direction: 1,
+        color: '#BBB',
+        speed: 1,
+        trail: 67,
+        shadow: true,
+        hwaccel: false,
+        className: 'spinner',
+        zIndex: 2e9,
+        top: top
+    };
+
+    ImageSpinner = new Spinner(opts).spin(document.getElementById('spinner'));
+    ImageSpinner.stop();
+
+    $('#upload-form').submit(function() {
+        $('#upload-button').attr('disabled', 'disabled');
+        $('#download-button').attr('disabled', 'disabled');
+        ImageSpinner.spin(document.getElementById('spinner'));
+    });
+});
+</script>
+{% endblock %}
+{% block main %}
+<style type="text/css">
+    .small {
+        font-size: 80%;
+    }
+
+    .caution {
+        color: #DE5D50;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .width222 {
+        width: 222px;
+    }
+
+    .width54 {
+        width: 70px;
+    }
+
+    .area {
+        width: 433px;
+        height: 134px;
+    }
+
+    .warningError {
+        color: #F00;
+    }
+
+    .floatLeft {
+        float: left;
+    }
+</style>
+<div id="upload_wrap" class="row">
+    <div id="upload_file_box" class="col-md-12">
+        <form id="upload-form" class="form-inline" method="post" action="{{ url('yamato_order_b2_csv_upload') }}" {{ form_enctype(form) }}>
+            {{ form_widget(form._token) }}
+            <div id="upload_file_box__body" class="box">
+                <div id="upload_file_box__header" class="box-header">
+                    <h3 class="box-title">送り状番号登録CSV</h3>
+                </div><!-- /.box-header -->
+                <div id="upload_file_box__body_inner" class="box-body">
+                    <div id="upload_file_box__upload_box" class="form-group">
+                        <label class="col-sm-5 control-label">CSVファイル選択</label>
+                        <div id="upload_file_box__import_file" class="col-sm-7">
+                            {{ form_widget(form.import_file, {'attr': {'accept': 'text/csv,text/tsv'}}) }}
+                            {{ form_errors(form.import_file) }}
+                        </div>
+                        <div id="upload_file_box__upload_error" class="text-danger">
+                            {% for error in errors %}
+                                {{ error.message }}<br/>
+                            {% endfor %}
+                        </div>
+                        {% if listRowShipmentEntryReport %}
+                            <p>■出荷情報登録</p>
+                            <div id="upload_file_box__upload_message" class="text-danger">
+                                {% for message in listRowShipmentEntryReport %}
+                                    {{ message }}<br/>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div id="spinner"></div>
+                </div><!-- /.box-body -->
+                <div id="button_box__upload_button" class="box-footer text-center">
+                    <button id="upload-button" type="submit" class="btn btn-primary btn-sm">CSVファイルのアップロード</button>
+                </div><!-- /.box-footer -->
+            </div><!-- /.box -->
+        </form>
+    </div><!-- /.col -->
+</div>
+
+<div id="file_format" class="row">
+    <div id="file_format_box" class="col-md-12">
+        <div id="file_format_box__body" class="box">
+            <div id="file_format_box__head" class="box-header">
+                {#<a href="{{ url('yamato_order_b2_csv_template', {'type': 'b2'}) }}" id="download-button" class="btn btn-default pull-right btn-xs">雛形ファイルダウンロード</a>#}
+                <h3 class="box-title">送り状番号登録CSVファイルフォーマット</h3>
+            </div><!-- /.box-header -->
+            <div id="file_format_box__body_inner" class="box-body no-padding">
+                <div id="file_format_box__list_box" class="table_list">
+                    <div id="file_format_box__list_box_body" class="table-responsive no-border table-menu table-responsive-overflow">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr id="file_format_box__header" class="text-nowrap">
+                                    {% for key in headers|keys %}
+                                        <th id="file_format_box__header--{{ loop.index }}">{{ key }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="file_format_box__list" class="text-nowrap">
+                                    {% if headers|length == 2 %}
+                                        <td>必須</td>
+                                        <td>必須</td>
+                                    {% else %}
+                                        {% for key in headers %}
+                                            {% if loop.index == 1 or loop.index == 4 %}
+                                                <td>必須</td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+    </div><!-- /.col -->
+</div>
+
+{% endblock %}

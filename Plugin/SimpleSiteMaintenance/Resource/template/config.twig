@@ -1,0 +1,65 @@
+{% extends 'default_frame.twig' %}
+
+{% block title %}メンテナンスプラグイン設定{% endblock %}
+
+{% form_theme form 'Form/bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block main %}
+    <div class="row" id="aside_wrap">
+        <div class="col-md-9">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">メンテナンス設定</h3>
+                </div><!-- /.box-header -->
+                <form role="form" class="form-horizontal" name="form1" id="form1" method="post" action="?">
+                    {{ form_row(form._token) }}
+
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required ">メンテナンス<span class="text-danger"> *</span></label>
+                            <div class="col-sm-6 {% if form.mente_mode.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.mente_mode) }}
+                                {{ form_errors(form.mente_mode) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required ">管理者のフロントへのアクセス<span class="text-danger"> *</span></label>
+                            <div class="col-sm-6 {% if form.admin_close_flg.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.admin_close_flg) }}
+                                {{ form_errors(form.admin_close_flg) }}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required ">メンテナンスページHTML<span class="text-danger"> *</span></label>
+                            <div class="col-sm-6 {% if form.page_html.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.page_html) }}
+                                {{ form_errors(form.page_html) }}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div><!-- /.box -->
+        </div><!-- /.col -->
+
+        <div class="col-md-3">
+            <div class="col_inner" id="aside_column">
+                <div class="box no-header">
+                    <div class="box-body">
+                        <div class="row text-center">
+                            <div class="col-sm-6 col-sm-offset-3 col-md-12 col-md-offset-0">
+                                <button class="btn btn-primary btn-block btn-lg" onclick="document.form1.submit();">登録</button>
+                            </div>
+                        </div>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div>
+        </div><!-- /.col -->
+
+
+    </div>
+
+{% endblock %}

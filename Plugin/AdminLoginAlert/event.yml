@@ -1,0 +1,2 @@
+eccube.event.admin.dummy:
+    - [onDummy, NORMAL]

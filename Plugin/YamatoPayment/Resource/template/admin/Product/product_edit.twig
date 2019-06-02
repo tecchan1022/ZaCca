@@ -1,0 +1,23 @@
+{#
+ Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+ Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+{% if use_option == '0' and advance_sale == '0' %}
+    <div id="detail_box__reserve_date" class="form-group{% if form.reserve_date.vars.errors is not empty %} has-error{% endif %}">
+        {{ form_label(form.reserve_date) }}
+        <div id="detail_box__reserve_date_text" class="col-sm-9 col-lg-5">
+            {{ form_widget(form.reserve_date) }}
+            {{ form_errors(form.reserve_date) }}
+            <div class="small text-danger">半角数字8文字（例）20140401</div>
+            ※商品種別『予約商品』の場合は必ず設定して下さい
+        </div>
+    </div>
+{% endif %}
+
+<div id="detail_box__flg" class="form-group{% if form.not_deferred_flg.vars.errors is not empty %} has-error{% endif %}">
+    <label class="col-sm-2 control-label">後払い不可商品</label>
+    <div id="detail_box__flg_chkbox" class="col-sm-9 col-lg-5">
+        {{ form_widget(form.not_deferred_flg) }}
+        {{ form_errors(form.not_deferred_flg) }}
+    </div>
+</div>

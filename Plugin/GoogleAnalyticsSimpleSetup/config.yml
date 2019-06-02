@@ -1,0 +1,10 @@
+name: GoogleAnalytics簡単設置プラグイン
+code: GoogleAnalyticsSimpleSetup
+version: 1.0.2
+service:
+    - GoogleAnalyticsSimpleSetupServiceProvider
+orm.path:
+    - /Resource/doctrine
+migration.path:
+    - /Migration
+event: Event

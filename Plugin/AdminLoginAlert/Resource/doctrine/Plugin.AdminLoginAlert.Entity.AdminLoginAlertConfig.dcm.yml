@@ -1,0 +1,15 @@
+Plugin\AdminLoginAlert\Entity\AdminLoginAlertConfig:
+    type: entity
+    table: plg_admin_login_alert_config
+    repositoryClass: Plugin\AdminLoginAlert\Repository\AdminLoginAlertConfigRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+    fields:
+        email:
+            type: text
+            nullable: true
+    lifecycleCallbacks: {  }

@@ -1,0 +1,47 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+<style type="text/css">
+    #detail_box__body_inner.dl_table dt {
+        margin-bottom: 12px;
+    }
+    #detail_box__body_inner.dl_table .csv_list {
+        margin-bottom: 10px;
+    }
+</style>
+
+<div id="detail_box__body_inner" class="dl_table">
+    <dl>
+        <dt>
+            <label>コンビニ選択<span class="required">必須</span></label>
+        </dt>
+        <dd>
+            <ul class="payment_list">
+                {% for key, child in form.cvs %}
+                <li>
+                    {{ form_widget(child, {'attr': {'class': "radio" }}) }}
+                    <img src="{{ app.config.plugin_urlpath }}/yamato_payment/img/cvs_logo_{{ child.vars.value }}.jpg">
+                </li>
+                {% endfor %}
+                {{ form_errors(form.cvs) }}
+            </ul>
+        </dd>
+    </dl>
+</div>
+
+<div class="row no-padding" style="margin-bottom: 20px;">
+    <div class="btn_group col-sm-offset-1 col-sm-10">
+        <p>以上の内容で間違いなければ、下記「ご注文完了ページへ」ボタンをクリックしてください。<br/>
+            ※ 画面が切り替わるまで少々時間がかかる場合がございますが、そのままお待ちください。</p>
+    </div>
+</div>
+
+<div class="row no-padding">
+    <div class="btn_group col-sm-offset-3 col-sm-5">
+        <p>
+            <button type="submit" class="btn btn-primary btn-block prevention-btn prevention-mask">ご注文完了ページへ</button>
+        </p>
+        <p><a href="{{ path('yamato_shopping_payment_back') }}" class="btn btn-info btn-block">戻る</a></p>
+    </div>
+</div>

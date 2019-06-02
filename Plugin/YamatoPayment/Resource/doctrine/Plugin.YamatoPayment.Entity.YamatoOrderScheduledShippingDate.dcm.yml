@@ -1,0 +1,16 @@
+Plugin\YamatoPayment\Entity\YamatoOrderScheduledShippingDate:
+    type: entity
+    table: plg_yamato_order_scheduled_shipping_date
+    repositoryClass: Plugin\YamatoPayment\Repository\YamatoOrderScheduledShippingDateRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            column: order_id
+    fields:
+        scheduled_shipping_date:
+            type: text
+            nullable: true
+    lifecycleCallbacks: {  }

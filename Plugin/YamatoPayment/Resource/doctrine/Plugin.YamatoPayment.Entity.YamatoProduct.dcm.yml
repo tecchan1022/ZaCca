@@ -1,0 +1,21 @@
+Plugin\YamatoPayment\Entity\YamatoProduct:
+    type: entity
+    table: plg_yamato_product
+    repositoryClass: Plugin\YamatoPayment\Repository\YamatoProductRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            column: product_id
+    fields:
+        reserve_date:
+            type: text
+            nullable: true
+        not_deferred_flg:
+            type: integer
+            nullable: false
+            options:
+                default: '0'
+    lifecycleCallbacks: {  }

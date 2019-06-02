@@ -1,0 +1,8 @@
+name: 管理者ログイン通知
+code: AdminLoginAlert
+version: 1.0.0
+event: AdminLoginAlertEvent
+service:
+    - AdminLoginAlertServiceProvider
+orm.path:
+    - /Resource/doctrine

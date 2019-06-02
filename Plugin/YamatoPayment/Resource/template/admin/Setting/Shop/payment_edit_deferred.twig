@@ -1,0 +1,50 @@
+{#
+ Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+ Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+    <style type="text/css">
+        .small {
+            font-size: 80%;
+        }
+
+        .caution {
+            color: #DE5D50;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .warningError {
+            color: #F00;
+        }
+
+        .floatLeft {
+            float: left;
+        }
+    </style>
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">クロネコ代金後払い設定</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">決済完了案内タイトル</label>
+
+                <div class="col-sm-9 {% if form.order_mail_title.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_title) }}<span class='caution'>（上限50文字）</span>
+                    {{ form_errors(form.order_mail_title) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">決済完了案内本文</label>
+
+                <div class="col-sm-9 {% if form.order_mail_body.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_body) }}<span class='caution'>（上限1000文字）</span>
+                    {{ form_errors(form.order_mail_body) }}
+                </div>
+            </div>
+
+        </div>
+    </div>

@@ -1,0 +1,47 @@
+Plugin\YamatoPayment\Entity\YamatoPlugin:
+    type: entity
+    table: plg_yamato_plugin
+    repositoryClass: Plugin\YamatoPayment\Repository\YamatoPluginRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            column: plugin_id
+            generator:
+                strategy: AUTO
+    fields:
+        code:
+            type: text
+            nullable: false
+            column: plugin_code
+        name:
+            type: text
+            nullable: false
+            column: plugin_name
+        sub_data:
+            type: text
+            nullable: true
+        b2_data:
+            type: text
+            nullable: true
+        auto_update_flg:
+            type: smallint
+            nullable: false
+            unsigned: false
+            options:
+                default: '0'
+        del_flg:
+            type: smallint
+            nullable: false
+            unsigned: false
+            options:
+                default: '0'
+        create_date:
+            type: datetime
+            nullable: false
+        update_date:
+            type: datetime
+            nullable: false
+    lifecycleCallbacks: {  }

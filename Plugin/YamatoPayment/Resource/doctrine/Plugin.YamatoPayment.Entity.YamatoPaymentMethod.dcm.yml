@@ -1,0 +1,54 @@
+Plugin\YamatoPayment\Entity\YamatoPaymentMethod:
+    type: entity
+    table: plg_yamato_payment_method
+    repositoryClass: Plugin\YamatoPayment\Repository\YamatoPaymentMethodRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            column: payment_id
+    fields:
+        method:
+            type: text
+            nullable: false
+            column: payment_method
+        create_date:
+            type: datetime
+            nullable: false
+        update_date:
+            type: datetime
+            nullable: false
+        memo01:
+            type: text
+            nullable: true
+        memo02:
+            type: text
+            nullable: true
+        memo03:
+            type: text
+            nullable: true
+        memo04:
+            type: text
+            nullable: true
+        memo05:
+            type: text
+            nullable: true
+        memo06:
+            type: text
+            nullable: true
+        memo07:
+            type: text
+            nullable: true
+        memo08:
+            type: text
+            nullable: true
+        memo09:
+            type: text
+            nullable: true
+        memo10:
+            type: text
+            nullable: true
+
+    lifecycleCallbacks: {  }

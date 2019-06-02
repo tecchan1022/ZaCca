@@ -1,0 +1,368 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+<script type="text/javascript">
+    function fnYamatoMulpayConfirm(mode, anchor, anchor_name) {
+        var message = "決済操作を行います。\n受注データを編集していない場合は先に保存して下さい。\nよろしいですか？";
+        if (window.confirm(message)) {
+            document.form1.mode_type.value = mode;
+            document.form1.submit();
+        }
+    }
+
+</script>
+
+<input type="hidden" name="mode_type" value="" />
+<div class="box accordion">
+    <div class="box-header toggle">
+        <h3 class="box-title">{{ appConst.YAMATO_SERVICE_NAME }}決済情報
+            <svg class="cb cb-angle-down icon_down">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cb-angle-down"/>
+            </svg>
+        </h3>
+    </div>
+
+    <div class="box-body accpanel" style="display: block;">
+        <div id="payment_info_box" class="order_list form-horizontal">
+
+            {# 決済種別 #}
+            <div class="form-group">
+                <div class="col-sm-3 col-lg-2">決済種別</div>
+                <div class="col-sm-9 col-lg-10">
+                    {{ Order.payment_method }}
+                </div>
+            </div>
+
+            {# 決済方法が 後払い かどうか判定 #}
+            {% if yamato_payid == appConst.YAMATO_PAYID_DEFERRED %}
+                {# 与信結果 #}
+                <div class="form-group">
+                    <div class="col-sm-3 col-lg-2">与信結果</div>
+                    <div class="col-sm-9 col-lg-10">
+                        {{ deferredExamResult[orderExtGetPaymentExamResult]|default('不明な状態') }}
+                    </div>
+                </div>
+            {% endif %}
+
+            {# 取引状況 #}
+            <div class="form-group">
+                <div class="col-sm-3 col-lg-2">取引状況</div>
+                <div class="col-sm-9 col-lg-10">
+                    {% if yamato_payid == appConst.YAMATO_PAYID_DEFERRED %}
+                        {{ deferredStatus[orderExtGetPaymentStatus]|default('不明な状態') }}
+                    {% else %}
+                        {{ paymentStatus[orderExtGetPaymentStatus]|default('不明な状態') }}
+                    {% endif %}
+                </div>
+            </div>
+
+            {# 決済方法が クレジットカード決済 #}
+            {% if yamato_payid == appConst.YAMATO_PAYID_CREDIT %}
+                {# 与信承認日 #}
+                <div class="form-group">
+                    <div class="col-sm-3 col-lg-2">与信承認日</div>
+                    <div class="col-sm-9 col-lg-10">
+                        {{ paymentData.auth_datetime|default('-') }}
+                    </div>
+                </div>
+
+                {# 与信承認番号 #}
+                <div class="form-group">
+                    <div class="col-sm-3 col-lg-2">与信承認番号</div>
+                    <div class="col-sm-9 col-lg-10">
+                        {{ orderExtGetPaymentData.crdCResCd|default }}
+                    </div>
+                </div>
+
+                {# 支払い方法 #}
+                <div class="form-group">
+                    <div class="col-sm-3 col-lg-2">支払い方法</div>
+                    <div class="col-sm-9 col-lg-10">
+                        {% if orderExtGetPaymentData.pay_way is defined %}
+                            {% if orderExtGetPaymentData.pay_way == '0' %}
+                                リボ払い
+                            {% else %}
+                                分割 {{ orderExtGetPaymentData.pay_way }}回払い
+                            {% endif %}
+                        {% else %}
+                            不明な状態
+                        {% endif %}
+                    </div>
+                </div>
+
+                {# 最終送信日時 #}
+                <div class="form-group">
+                    <div class="col-sm-3 col-lg-2">最終送信日時</div>
+                    <div class="col-sm-9 col-lg-10">
+                        {{ orderExtGetPaymentData.returnDate|default }}
+                    </div>
+                </div>
+            {% endif %}
+
+            {# 決済方法が コンビニ決済 #}
+            {% if yamato_payid == appConst.YAMATO_PAYID_CVS %}
+
+                {# 支払い先コンビニ #}
+                <div class="form-group">
+                    <div class="col-sm-3 col-lg-2">支払い先コンビニ</div>
+                    <div class="col-sm-9 col-lg-10">
+                        {% if paymentData.cvs is defined %}
+                            {{ convenienceStores[paymentData.cvs] }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if paymentData.cvs is defined %}
+                    {# 支払い先コンビニがセブンイレブン #}
+                    {% if paymentData.cvs == appConst.CONVENI_ID_SEVENELEVEN %}
+                        {# 払込票番号 #}
+                        <div class="form-group">
+                            <div class="col-sm-3 col-lg-2">払込票番号</div>
+                            <div class="col-sm-9 col-lg-10">
+                                {{ orderExtGetPaymentData.billingNo|default }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {# 支払い先コンビニがファミリーマート #}
+                    {% if paymentData.cvs == appConst.CONVENI_ID_FAMILYMART %}
+                        {# 企業コード #}
+                        <div class="form-group">
+                            <div class="col-sm-3 col-lg-2">企業コード</div>
+                            <div class="col-sm-9 col-lg-10">
+                                {{ orderExtGetPaymentData.companyCode|default }}
+                            </div>
+                        </div>
+
+                        {# 注文番号 #}
+                        <div class="form-group">
+                            <div class="col-sm-3 col-lg-2">注文番号</div>
+                            <div class="col-sm-9 col-lg-10">
+                                {{ orderExtGetPaymentData.orderNoF|default }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {# 支払い先コンビニがローソン #}
+                    {% if paymentData.cvs == appConst.CONVENI_ID_LAWSON %}
+                        {# 受付番号 #}
+                        <div class="form-group">
+                            <div class="col-sm-3 col-lg-2">受付番号</div>
+                            <div class="col-sm-9 col-lg-10">
+                                {{ orderExtGetPaymentData.econNo|default }}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                {# 支払期限日 #}
+                <div class="form-group">
+                    <div class="col-sm-3 col-lg-2">支払期限日</div>
+                    <div class="col-sm-9 col-lg-10">
+                        {{ orderExtGetPaymentData.expiredDate|default }}
+                    </div>
+                </div>
+                
+            {% endif %}
+
+            {# 決済方法が 後払い決済 #}
+            {% if yamato_payid == appConst.YAMATO_PAYID_DEFERRED %}
+                {# 送信日時 #}
+                <div class="form-group">
+                    <div class="col-sm-3 col-lg-2">送信日時</div>
+                    <div class="col-sm-9 col-lg-10">
+                        {{ orderExtGetPaymentData.requestDate|default }}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% set yamatoTotalAmount = NULL %}
+            {% if yamato_payid == appConst.YAMATO_PAYID_DEFERRED %}
+                {% set yamatoTotalAmount = orderExtGetPaymentData.totalAmount|default %}
+            {% else %}
+                {% set yamatoTotalAmount = orderExtGetPaymentData.settle_price|default %}
+            {% endif %}
+
+            {# 決済金額 #}
+            <div class="form-group">
+                <div class="col-sm-3 col-lg-2">決済金額</div>
+                <div class="col-sm-9 col-lg-10">
+                    {% if yamatoTotalAmount is defined %}
+                        {{ yamatoTotalAmount|number_format }}円&nbsp;&nbsp;
+                        {% if Order.payment_total is defined %}
+                            {% if yamatoTotalAmount != Order.payment_total %}
+                                <span class="small text-danger">※決済金額とお支払い合計に差異があります。</span>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            {# 決済操作 #}
+            {% if buttons|length > 0 %}
+                <div class="form-group">
+                    <div class="col-sm-3 col-lg-2">決済操作</div>
+                    <div class="col-sm-9 col-lg-10">
+                        {% if buttons['SHIPMENT_REGIST'] is defined %}
+                            <a id="btn_yamato_shipment_regist" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_shipment_regist','','');" >出荷情報登録
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['SHIPMENT_CANCEL'] is defined %}
+                            <a id="btn_yamato_shipment_cancel" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_shipment_cancel','','');" >出荷情報取消
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['GET_INFO'] is defined %}
+                            <a id="btn_yamato_get_info" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_get_info','','');">取引情報照会
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['CHANGE_RESERVE'] is defined %}
+                            <a id="btn_yamato_change_scheduled_shipping_date" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_change_scheduled_shipping_date','','');">出荷予定日変更
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['CANCEL'] is defined %}
+                            <a id="btn_yamato_cancel" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_cancel','','');">決済取消
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['CHANGE_PRICE'] is defined %}
+                            <a id="btn_yamato_change_price" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_change_price','','');">金額変更
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['REAUTH'] is defined %}
+                            <a id="btn_yamato_change_price" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_reauth','','');">再与信
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['DEFERRED_SHIPMENT_REGIST'] is defined %}
+                            <a id="btn_yamato_deferred_shipment_regist" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_deferred_shipment_regist','','');" >出荷情報登録
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['DEFERRED_SHIPMENT_CANCEL'] is defined %}
+                            <a id="btn_yamato_deferred_shipment_cancel" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_deferred_shipment_cancel','','');" >出荷情報取消
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['DEFERRED_GET_INFO'] is defined %}
+                            <a id="btn_yamato_deferred_get_info" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_deferred_get_info','','');">取引情報取得
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['DEFERRED_AUTH_CANCEL'] is defined %}
+                            <a id="btn_yamato_deferred_auth_cancel" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_deferred_auth_cancel','','');">与信取消
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['DEFERRED_GET_AUTH'] is defined %}
+                            <a id="btn_yamato_deferred_get_auth" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_deferred_get_auth','','');">与信結果取得
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['DEFERRED_CHANGE_PRICE'] is defined %}
+                            <a id="btn_yamato_deferred_change_price" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_deferred_change_price','','');">金額変更
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['DEFERRED_INVOICE_REISSUE'] is defined %}
+                            <a id="btn_yamato_deferred_invoice_reissue" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_deferred_invoice_reissue','','');">請求内容変更・請求書再発行
+                            </a>
+                        {% endif %}
+
+                        {% if buttons['DEFERRED_INVOICE_REISSUE_WITHDRAWN'] is defined %}
+                            <a id="btn_yamato_deferred_invoice_reissue_withdrawn" class="btn btn-default" href="javascript:;"
+                               onclick="fnYamatoMulpayConfirm('yamato_deferred_invoice_reissue_withdrawn','','');">請求書再発行取下げ
+                            </a>
+                        {% endif %}
+
+                    </div>
+                </div>
+            {% endif %}
+
+            {# 決済方法が クレジットカード決済 #}
+            {% if yamato_payid == appConst.YAMATO_PAYID_CREDIT and userSettings.use_option == '0' and userSettings.advance_sale == '0' %}
+                {# 出荷予定日 #}
+                <div class="form-group" id="scheduled_shipping_date">
+                    <div class="col-sm-3 col-lg-2">出荷予定日</div>
+                    <div class="col-sm-2 col-lg-3">
+                        {{ form_widget(form.scheduled_shipping_date) }}
+                        {{ form_errors(form.scheduled_shipping_date) }}
+                        <div class="small text-danger">半角数字8文字（例）20140401</div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {# 決済方法が 後払い決済 #}
+            {% if yamato_payid == appConst.YAMATO_PAYID_DEFERRED %}
+                {# 買手情報一括登録CSV #}
+                <div class="form-group">
+                    <div class="col-sm-3 col-lg-2">買手情報一括登録CSV</div>
+                    <div class="col-sm-9 col-lg-10">
+                        {% if buttons['CSV'] is defined %}
+                            <a class="btn btn-default" href="{{ url('admin_order_export_buyer', { 'id' : Order.id }) }}">CSVダウンロード</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <div class="col-sm-3 col-lg-2">決済ログ</div>
+                <div class="col-sm-9 col-lg-10">
+                    <a href="javascript:;" onclick="$('#yamato_payment_log').slideToggle();">決済ログ表示・非表示</a>
+                    <table id="yamato_payment_log" style="display:none;" class="table">
+                        <thead>
+                        <tr>
+                            <th width='20%'>時間</th>
+                            <th>内容</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for paymentLog in orderExtGetPaymentLog %}
+                            {% for log_time, logs in paymentLog %}
+                                <tr>
+                                    <td>{{ log_time }}</td>
+                                    <td style="word-wrap:break-word;">
+                                        {% for lkey, log in logs %}
+                                            {# check log whether is array or not #}
+                                            {% if log is iterable %}
+                                                {{ lkey }}={{ '{' }}{% for val in log %}{{ val }}{{ loop.last ? '' : ', ' }}{% endfor %}{{ '}' }}
+                                            {% else %}
+                                                {{ lkey }}={{ log }}
+                                                {{ loop.last ? '' : ',' }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="2">No any log</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

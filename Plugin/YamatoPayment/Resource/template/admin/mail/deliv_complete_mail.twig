@@ -1,0 +1,33 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+{% if ShippingDelivSlips.count > 0 %}
+{% if userSettings.delivery_service_code == '00' %}
+************************************************
+　クロネコヤマトの荷物お問い合わせシステム
+************************************************
+
+{% for item in ShippingDelivSlips %}
+◎お届け先{{ loop.index }}
+
+荷物のお問合せ番号（宅急便伝票番号）：{{ item.deliv_slip_number }}
+追跡URL：{% if item.deliv_slip_url %}{{ item.deliv_slip_url|raw  }}{% else %}{{ const.DEFERRED_DELIV_SLIP_URL }}{% endif %}
+
+{% endfor %}
+
+{% else %}
+************************************************
+　お荷物の発送情報
+************************************************
+
+{% for item in ShippingDelivSlips %}
+◎お届け先{{ loop.index }}
+
+送り状番号：{{ item.deliv_slip_number }}
+追跡URL：{% if item.deliv_slip_url %}{{ item.deliv_slip_url|raw  }}{% else %}{{ const.DEFERRED_DELIV_SLIP_URL }}{% endif %}
+
+{% endfor %}
+
+{% endif %}
+{% endif %}

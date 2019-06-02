@@ -1,0 +1,349 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+<script type="text/javascript" class="webcollect-embedded-token" src="{{ moduleSettings.tokenUrl }}"></script>
+<script type="text/javascript">
+    var lastUseDate = [];
+    var cardCnt = 0;
+{% for cardData in cardListData %}
+    lastUseDate[{{ cardData.card_key }}] = '{{ cardData.lastCreditDate }}';
+    cardCnt++;
+{% endfor %}
+    /*
+     * 登録上限チェック
+     */
+    function fnCheckMaxRegist() {
+        var saveLimit = "{{ moduleSettings.saveLimit }}";
+        if(saveLimit == "") {
+            saveLimit = 0;
+        }
+
+        if(cardCnt >= saveLimit) {
+            alert("カードお預かりは"+saveLimit+"件までとなっております。");
+            if($('#regist_credit_register_card') != null) {
+                $("#regist_credit_register_card").attr("checked", false);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /*
+     * 送信ボタン押下時に実行するJavaScript関数
+     */
+    var isJsSend = false;
+    function executePay() {
+        if(isJsSend) {
+            alert("只今、処理中です。しばらくお待ち下さい。");
+            return false;
+        } else {
+
+            isJsSend = true;
+
+            $overlay = $('<div class="prevention-masked">');
+            $('body').append($overlay);
+
+            $('#regist_credit_card_no').css({'background-color': '#ffffff'});
+            $('#regist_credit_card_owner').css({'background-color': '#ffffff'})
+            $('#regist_credit_card_exp_month').css({'background-color': '#ffffff'});
+            $('#regist_credit_card_exp_year').css({'background-color': '#ffffff'});
+            $('#regist_credit_security_code').css({'background-color': '#ffffff'});
+
+            // コールバック関数（「正常」の場合）
+            var callbackSuccess = function(response) {
+                var formElement = document.form1;
+                // カード情報がリクエストパラメータに含まれないようにする
+                removeCardData();
+
+                // formに発行したトークンを追加する
+                if($('#regist_credit_webcollectToken').size()) {
+                    $('#regist_credit_webcollectToken').val(response.token);
+                } else {
+                    var hiddenElement = document.createElement("input");
+                    hiddenElement.type = "hidden";
+                    hiddenElement.name = "regist_credit[webcollectToken]";
+                    hiddenElement.value = response.token;
+
+                    formElement.appendChild(hiddenElement);
+                }
+
+                formElement.mode.value = "next";
+
+                // formをサブミットする
+                formElement.submit();
+            }
+
+
+            // コールバック関数（「異常」の場合）
+            var callbackFailure = function(response) {
+                //エラー情報を取得
+                var errorInfo = response.errorInfo;
+
+                //errorItemの内容に応じてテキストボックスの背景色を変更する関数
+                function changeColor(errorItem) {
+                    switch(errorItem) {
+                        case "cardNo":
+                            $('#regist_credit_card_no').css({'background-color': '#fdeef1'});
+                            break;
+                        case "cardOwner":
+                            $('#regist_credit_card_owner').css({'background-color': '#fdeef1'})
+                            break;
+                        case "cardExp":
+                            $('#regist_credit_card_exp_month').css({'background-color': '#fdeef1'});
+                            $('#regist_credit_card_exp_year').css({'background-color': '#fdeef1'});
+                            break;
+                        {% if moduleSettings.useSecurityCode == '1' %}
+                            case "securityCode":
+                                $('#regist_credit_security_code').css({'background-color': '#fdeef1'});
+                                break;
+                        {% endif %}
+                    }
+                }
+
+                //エラーの数だけ処理を繰り返す
+                for (var i = 0; i<errorInfo.length; i++) {
+                    if (errorInfo[i].errorItem) {
+                        changeColor(errorInfo[i].errorItem);
+                    }
+
+                    //メッセージをalertで出力
+                    alert(errorInfo[i].errorCode + " : " + errorInfo[i].errorMsg);
+                }
+
+                isJsSend = false;
+                $("div").remove(".prevention-masked");
+                return false;
+            }
+
+            // トークン発行APIへ渡すパラメータ(共通)
+            var createTokenInfo = {
+                traderCode: "{{ moduleSettings.shop_id }}",
+                authDiv: "{{ moduleSettings.auth_div }}",
+                optServDiv: "00",
+                {% if moduleSettings.useSecurityCode == '1' %}
+                    securityCode: $('#regist_credit_security_code').val(),
+                {% endif %}
+                checkSum: "{{ moduleSettings.check_sum }}"
+            }
+
+            var isRegist    = false;
+            if($('#regist_credit_register_card') != null) {
+                isRegist    = $('#regist_credit_register_card').prop('checked')
+            }
+            {% if reservService == true %}
+                // 予約商品の場合
+                isRegist = true;
+            {% endif %}
+
+            var isUseRegist = false;
+            if(lastUseDate.length) {
+                isUseRegist = $('#use_registed_card').prop('checked');
+            }
+
+            {% if moduleSettings.autoRegist == '1' %}
+            // 登録済みカードを使用していなければカードを自動登録
+            if(isUseRegist == false) {
+                isRegist = true;
+                // formにカード登録チェックを追加する
+                var hiddenElement = document.createElement("input");
+                hiddenElement.type = "checkbox";
+                hiddenElement.name = "regist_credit[register_card]";
+                hiddenElement.value = 1;
+                hiddenElement.id = "regist_credit_register_card";
+                document.form1.appendChild(hiddenElement);
+                hiddenElement.setAttribute("checked","checked");
+                hiddenElement.style.display = "none";
+            }
+            {% endif %}
+
+            if(isRegist) {
+                if(fnCheckMaxRegist() == false) {
+                    isJsSend = false;
+                    $("div").remove(".prevention-masked");
+                    return false;
+                }
+            }
+
+            if(isRegist || isUseRegist) {
+                createTokenInfo["optServDiv"] = "01";
+                createTokenInfo["memberId"]   = "{{ moduleSettings.member_id }}";
+                createTokenInfo["authKey"]    = "{{ moduleSettings.authentication_key }}";
+            } else {
+                createTokenInfo["checkSum"]   = "{{ moduleSettings.no_member_check_sum }}";
+            }
+
+            // 登録済みカードを使用
+            if(isUseRegist) {
+                //選択されたものを探し出す
+                card_key_num = $("input[name='regist_credit[card_key]']:checked").val();
+                createTokenInfo["cardKey"]        = card_key_num;
+                createTokenInfo["lastCreditDate"] = lastUseDate[card_key_num];
+            } else {
+                createTokenInfo["cardNo"]    = $('#regist_credit_card_no').val();
+                createTokenInfo["cardOwner"] = $('#regist_credit_card_owner').val();
+                createTokenInfo["cardExp"]   = $('#regist_credit_card_exp_month').val() + $('#regist_credit_card_exp_year').val();
+            }
+            // webコレクトが提供するJavaScript関数を実行し、トークンを発行する。
+            WebcollectTokenLib.createToken(createTokenInfo, callbackSuccess, callbackFailure);
+        }
+    }
+
+
+    $(function() {
+        $('#use_registed_card').change(function () {
+            if ($(this).prop('checked')) {
+                $('.dispTarget').hide();
+            } else {
+                $('.dispTarget').show();
+            }
+        });
+    });
+
+    function deleteCard(){
+
+        if (!window.confirm('一度削除したカード情報は、元に戻せません。\n削除しても宜しいですか？')) {
+            return;
+        }
+
+        // カード情報がリクエストパラメータに含まれないようにする
+        removeCardData()
+
+        document.getElementById('mode').value='deleteCard';
+        document.forms['form1'].submit();
+     }
+
+     function removeCardData() {
+         $('#regist_credit_card_no').removeAttr("name");
+         $('#regist_credit_card_owner').removeAttr("name");
+         $('#regist_credit_card_exp_month').removeAttr("name");
+         $('#regist_credit_card_exp_year').removeAttr("name");
+         {% if moduleSettings.useSecurityCode == '1' %}
+            $('#regist_credit_security_code').removeAttr("name");
+         {% endif %}
+     }
+</script>
+
+<style type="text/css">
+    #detail_box__body_inner.dl_table {
+        margin-bottom: 16px;
+    }
+</style>
+
+<div id="detail_box__body_inner" class="dl_table">
+    {% if tpl_delete_card_success == true %}
+        <div class="message">
+            <p class="heading01">正常に削除されました。</p>
+        </div>
+    {% endif %}
+    {{ form_widget(form.webcollectToken) }}
+    <input type="hidden" id="mode" name="regist_credit[mode]" value="">
+    {% if cardListData is not null %}
+        <dl id="detail_box__use_select_card">
+            <dt>選択</dt>
+            <dd>
+                <div class="form-group form-inline">
+                    <div class="checkbox">
+                        <label><input type="checkbox" id="use_registed_card" name="regist_credit[use_registed_card]" {% if form.use_registed_card.vars.data == true %}checked="checked"{% endif %}> 登録カードを利用する</label>
+                    </div>
+                    <br/>
+                    <div id="card_data">
+                        {% for cardData in cardListData %}
+                        <div class="radio">
+                            <label class="required">
+                                <input type="radio" id="card_key" name="regist_credit[card_key]" value="{{ cardData.card_key }}" {% if default_card_key == cardData.card_key %} checked="checked" {% endif %}> {{ cardData.data }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <br/>
+                    <a class="btn btn-default" onclick="deleteCard();" style="margin-top: 20px;">選択したカードを削除</a>
+                </div>
+            </dd>
+        </dl>
+    {% endif %}
+    <dl id="detail_box__card_number" class="dispTarget" {% if form.use_registed_card.vars.data and cardListData is not empty %}style="display: none"{% endif %}>
+        <dt>カード番号<span class="required">必須</span></dt>
+        <dd>
+            <div class="form-group form-inline {% if form.card_no.vars.errors is not empty %}has-error{% endif %}">
+                {{ form_widget(form.card_no) }}
+                {{ form_errors(form.card_no) }}
+            </div>
+        </dd>
+    </dl>
+    <dl id="detail_box__card_expire" class="dispTarget" {% if form.use_registed_card.vars.data and cardListData is not empty %}style="display: none"{% endif %}>
+        <dt>カード有効期限<span class="required">必須</span></dt>
+        <dd>
+            <div class="form-group form-inline {% if form.card_exp_month.vars.errors is not empty or form.card_exp_year.vars.errors is not empty %}has-error{% endif %}">
+                {{ form_widget(form.card_exp_month) }}月 / 20 {{ form_widget(form.card_exp_year) }}年
+                {{ form_errors(form.card_exp_month) }}
+                {{ form_errors(form.card_exp_year) }}
+            </div>
+        </dd>
+    </dl>
+    <dl id="detail_box__card_name" class="dispTarget" {% if form.use_registed_card.vars.data and cardListData is not empty %}style="display: none"{% endif %}>
+        <dt>カード名義<span class="required">必須</span></dt>
+        <dd>
+            <div class="form-group form-inline {% if form.card_owner.vars.errors is not empty %}has-error{% endif %}">
+                {{ form_widget(form.card_owner) }}
+                {{ form_errors(form.card_owner) }}
+                <p>カードに記載の名前をご記入下さい。ご本人名義のカードをご使用ください。半角英文字入力（例：TAROU YAMADA）</p>
+            </div>
+        </dd>
+    </dl>
+    {% if moduleSettings.useSecurityCode == '1' %}
+    <dl id="detail_box__security_code">
+        <dt>セキュリティコード<span class="required">必須</span></dt>
+        <dd>
+            <div class="form-group form-inline {% if form.security_code.vars.errors is not empty %}has-error{% endif %}">
+                {{ form_widget(form.security_code) }}
+                {{ form_errors(form.security_code) }}
+                <p>主にカード裏面の署名欄に記載されている末尾３桁～４桁の数をご記入ください。半角入力（例：123）</p>
+                <img src="{{ app.config.plugin_urlpath }}/yamato_payment/img/security_code_info.png">
+            </div>
+        </dd>
+    </dl>
+    {% endif %}
+    <dl id="detail_box__method">
+        <dt>支払い方法<span class="required">必須</span></dt>
+        <dd>
+            <div class="form-group form-inline {% if form.pay_way.vars.errors is not empty %}has-error{% endif %}">
+                {{ form_widget(form.pay_way) }}
+                {{ form_errors(form.pay_way) }}
+            </div>
+        </dd>
+    </dl>
+{% if moduleSettings.autoRegist == '0' %}
+    {% if (customer is not null and optionService)  or reservService %}
+        <dl id="detail_box__save_card" class="dispTarget" {% if form.use_registed_card.vars.data == true %}style="display: none"{% endif %}>
+            <dt>カード情報登録</dt>
+            <dd>
+                <div class="form-group form-inline {% if form.register_card.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_row(form.register_card) }}
+                    {{ form_errors(form.register_card) }}
+                    {% if reservService %}
+                        <p style="color: #DE5D50;">予約商品販売はカードお預かりが必須になります。<br /></p>
+                    {% endif %}
+                    <p>カード情報を登録すると次回より入力無しで購入出来ます。<br />カード情報は当店では保管いたしません。<br />委託する決済代行会社にて安全に保管されます。</p>
+                </div>
+            </dd>
+        </dl>
+    {% endif %}
+{% endif %}
+</div>
+
+<div class="row no-padding" style="margin-bottom: 20px;">
+    <div class="btn_group col-sm-offset-1 col-sm-10">
+        以上の内容で間違いなければ、下記「ご注文完了ページへ」ボタンをクリックしてください。<br/>
+        ※ 画面が切り替わるまで少々時間がかかる場合がございますが、そのままお待ちください。
+    </div>
+</div>
+
+<div class="row no-padding">
+    <div class="btn_group col-sm-offset-3 col-sm-5">
+        <p>
+            <button type="button" onClick="executePay();" class="btn btn-primary btn-block">ご注文完了ページへ</button>
+        </p>
+        <p><a href="{{ path('yamato_shopping_payment_back') }}" class="btn btn-info btn-block">戻る</a></p>
+    </div>
+</div>

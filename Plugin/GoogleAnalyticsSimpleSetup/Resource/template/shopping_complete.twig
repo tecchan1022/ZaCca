@@ -1,0 +1,44 @@
+{#
+ Copyright(c) 2015 SystemFriend Inc. All rights reserved.
+ http://ec-cube.systemfriend.co.jp/
+#}
+
+{% block javascript %}
+
+    <!-- ▼ GoogleAnalytics ▼ -->
+    <script>
+
+        {% if order_id is not empty %}
+
+            ga('require', 'ecommerce');
+
+            ga('ecommerce:addTransaction', {
+                'id': '{{ order_id }}',
+                'affiliation': '',
+                'revenue': '{{ arrOrder["total"] }}',
+                'shipping': '{{ arrOrder["deliv_fee"] }}',
+                'tax': '{{ arrOrder["tax"] }}',
+                'currency': 'JPY'
+            });
+
+            {% for order_detail_id, item in arrOrderDetail %}
+
+                ga('ecommerce:addItem', {
+                    'id': '{{ order_id }}',
+                    'name': '{{ item["product_name"] }}',
+                    'sku': '{{ item["product_code"] }}',
+                    'category': '{{ item["classcategory_name"] }}',
+                    'price': '{{ item["price"] }}',
+                    'quantity': '{{ item["quantity"] }}',
+                    'currency': 'JPY'
+                });
+
+            {% endfor %}
+
+            ga('ecommerce:send');
+
+        {% endif %}
+    </script>
+    <!-- ▲ GoogleAnalytics ▲ -->
+
+{% endblock %}

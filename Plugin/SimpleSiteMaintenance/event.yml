@@ -1,0 +1,4 @@
+#フロント画面共通レスポンス
+#メンテ化のためレスポンスを後発で書き換え
+eccube.event.front.response:
+    - [onEccubeEventFrontResponse, LAST]

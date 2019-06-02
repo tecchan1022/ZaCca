@@ -1,0 +1,5 @@
+name: メール設定プラグイン
+code: MailTemplateEditor
+version: 1.0.0
+service:
+    - MailTemplateEditorServiceProvider

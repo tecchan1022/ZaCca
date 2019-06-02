@@ -1,0 +1,8 @@
+name: メンテナンスプラグイン
+code: SimpleSiteMaintenance
+event: SimpleSiteMaintenance
+version: 1.0.1
+service:
+    - SimpleSiteMaintenanceServiceProvider
+orm.path:
+    - /Resource/doctrine

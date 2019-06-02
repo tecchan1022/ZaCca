@@ -1,0 +1,15 @@
+auth_magic: yBL2ab2Q42eBQP3fSPsI75PQHGuxDAjZ
+password_hash_algos: sha256
+shop_name: ZaCca
+force_ssl: null
+admin_allow_host: {  }
+cookie_lifetime: 0
+cookie_name: eccube
+locale: ja
+timezone: Asia/Tokyo
+pageinrange: false
+trusted_proxies_connection_only: true
+trusted_proxies:
+    - 127.0.0.1/8
+    - '::1'
+eccube_install: 1

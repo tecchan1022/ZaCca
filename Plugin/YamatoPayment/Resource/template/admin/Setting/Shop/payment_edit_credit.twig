@@ -1,0 +1,82 @@
+{#
+ Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+ Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+    <style type="text/css">
+        .small {
+            font-size: 80%;
+        }
+
+        .caution {
+            color: #DE5D50;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .warningError {
+            color: #F00;
+        }
+
+        .floatLeft {
+            float: left;
+        }
+    </style>
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">WEBコレクト設定</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">支払種別 <span class='warningError'>*</span></label>
+
+                <div class="col-sm-10 {% if form.pay_way.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.pay_way) }}
+                    {{ form_errors(form.pay_way) }}
+                    ※有効にする支払い種別を選択して下さい。
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">本人認証サービス(3Dセキュア) <span class='warningError'>*</span></label>
+
+                <div class="col-sm-10 {% if form.TdFlag.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.TdFlag) }}
+                    {{ form_errors(form.TdFlag) }}
+                    ※ご利用端末がPC、かつ3Dセキュア対象カードの場合、本人認証が実行されます。<br>
+                    スマートフォンは3Dセキュア対象外となっております。<br>
+                    ※本人認証サービスをご利用の場合は、セキュリティ管理画面のSSL制限にチェックをいれてください。
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">自動カード登録 <span class='warningError'>*</span></label>
+
+                <div class="col-sm-10 {% if form.autoRegist.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.autoRegist) }}
+                    {{ form_errors(form.autoRegist) }}
+                    ※クレジットカード決済時に自動的にクレジットカード登録をします。
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">決済完了案内タイトル</label>
+
+                <div class="col-sm-9 {% if form.order_mail_title.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_title) }}<span class='caution'>（上限50文字）</span>
+                    {{ form_errors(form.order_mail_title) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">決済完了案内本文</label>
+
+                <div class="col-sm-9 {% if form.order_mail_body.vars.errors is not empty %}has-error{% endif %}">
+                    {{ form_widget(form.order_mail_body) }}<span class='caution'>（上限1000文字）</span>
+                    {{ form_errors(form.order_mail_body) }}
+                </div>
+            </div>
+
+        </div>
+    </div>

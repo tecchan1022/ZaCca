@@ -1,0 +1,298 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+{% extends 'default_frame.twig' %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block title %}{{ tpl_subtitle }} B2設定{% endblock %}
+
+{% form_theme form 'Form/bootstrap_3_horizontal_layout.html.twig' %}
+{% block main %}
+    <style type="text/css">
+        .padL09par {
+            padding-left: 9% !important;
+        }
+    </style>
+
+    <div class="row" id="aside_wrap">
+        <form name="form1" role="form" novalidate class="form-horizontal" id="point_form" method="post" action="">
+            {{ form_widget(form._token) }}
+            <div class="col-md-9">
+
+                <div class="box" id="basic_setting_box__body">
+                    <div class="box-header">
+                        <h3 class="box-title">基本設定</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required">ご請求先お客様コード<span class="text-danger"> *</span></label>
+                            <div class="col-sm-5 {% if form.claim_customer_code.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.claim_customer_code) }}
+                                {{ form_errors(form.claim_customer_code) }}
+                            </div>
+                            <label class="col-sm-3 control-label required">(半角数字 12 桁)</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required">ご請求先分類コード</label>
+                            <div class="col-sm-5 {% if form.claim_type_code.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.claim_type_code) }}
+                                {{ form_errors(form.claim_type_code) }}
+                            </div>
+                            <label class="col-sm-3 control-label required">(半角数字 3 桁)</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required">運賃管理番号<span class="text-danger"> *</span></label>
+                            <div class="col-sm-5 {% if form.transportation_no.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.transportation_no) }}
+                                {{ form_errors(form.transportation_no) }}
+                            </div>
+                            <label class="col-sm-3 control-label required">(半角数字 2 桁)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box" id="operation_setting_box__body">
+                    <div class="box-header">
+                        <h3 class="box-title">B2動作設定</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">一行目のタイトル行<span class="text-danger"> *</span></label>
+                            <div class="col-sm-8 {% if form.header_output.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.header_output) }}
+                                {{ form_errors(form.header_output) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">電話番号</label>
+                            <div class="col-sm-8 {% if form.tel_hyphenation.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.tel_hyphenation) }}
+                                {{ form_errors(form.tel_hyphenation) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">郵便番号</label>
+                            <div class="col-sm-8 {% if form.zip_hyphenation.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.zip_hyphenation) }}
+                                {{ form_errors(form.zip_hyphenation) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">お届け予定eメール</label>
+                            <div class="col-sm-8 {% if form.service_deliv_mail_enable.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.service_deliv_mail_enable) }}
+                                {{ form_errors(form.service_deliv_mail_enable) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">
+                                お届け予定eメールメッセージ<br/>
+                                <span class="text-danger" style="font-size: small">※ 「お届け予定eメール」を利用する場合は必須</span>
+                            </label>
+                            <div class="col-sm-5 {% if form.service_deliv_mail_message.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.service_deliv_mail_message) }}
+                                {{ form_errors(form.service_deliv_mail_message) }}
+                            </div>
+                            <label class="col-sm-3 control-label required"><span class="text-danger">(上限 74 文字)</span></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">お届け完了eメール</label>
+                            <div class="col-sm-8 {% if form.service_complete_mail_enable.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.service_complete_mail_enable) }}
+                                {{ form_errors(form.service_complete_mail_enable) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">
+                                お届け完了eメールメッセージ<br/>
+                                <span class="text-danger" style="font-size: small">※ 「お届け完了eメール」を利用する場合は必須</span>
+                            </label>
+                            <div class="col-sm-5 {% if form.service_complete_mail_message.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.service_complete_mail_message) }}
+                                {{ form_errors(form.service_complete_mail_message) }}
+                            </div>
+                            <label class="col-sm-3 control-label required"><span class="text-danger">(上限 159 文字)</span></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">ご依頼主出力</label>
+                            <div class="col-sm-8 {% if form.output_order_type.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.output_order_type) }}
+                                {{ form_errors(form.output_order_type) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">投函予定メール</label>
+                            <div class="col-sm-8 {% if form.posting_plan_mail_enable.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.posting_plan_mail_enable) }}
+                                {{ form_errors(form.posting_plan_mail_enable) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">
+                                投函予定メールメッセージ<br/>
+                                <span class="text-danger" style="font-size: small">※ 「投函予定メール」を利用する場合は必須（ネコポスのみ）</span>
+                            </label>
+                            <div class="col-sm-5 {% if form.posting_plan_mail_message.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.posting_plan_mail_message) }}
+                                {{ form_errors(form.posting_plan_mail_message) }}
+                            </div>
+                            <label class="col-sm-3 control-label required"><span class="text-danger">(上限 74 文字)</span></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">投函完了メール</label>
+                            <div class="col-sm-8 {% if form.posting_complete_deliv_mail_enable.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.posting_complete_deliv_mail_enable) }}
+                                {{ form_errors(form.posting_complete_deliv_mail_enable) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">
+                                投函完了メール(注文者宛)メッセージ<br/>
+                                <span class="text-danger" style="font-size: small">※ 「投函完了メール(注文者宛)」を利用する場合は必須（ネコポスのみ）</span>
+                            </label>
+                            <div class="col-sm-5 {% if form.posting_complete_deliv_mail_message.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.posting_complete_deliv_mail_message) }}
+                                {{ form_errors(form.posting_complete_deliv_mail_message) }}
+                            </div>
+                            <label class="col-sm-3 control-label required"><span class="text-danger">(上限 159 文字)</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box" id="operation_invoice_setting_box__body">
+                    <div class="box-header">
+                        <h3 class="box-title">B2送り状種別設定</h3>
+                    </div>
+                    <div class="box-body">
+                        {% for b2_payment in form.b2_payment_type %}
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label required">{{ b2_payment.payment_method.vars.data }}</label>
+                                <div class="col-sm-4 {% if b2_payment.vars.errors is not empty is not empty %}has-error{% endif %}">
+                                    {{ form_widget(b2_payment.payment_id) }}
+                                    {{ form_widget(b2_payment.payment_method) }}
+                                    {{ form_widget(b2_payment.deliv_slip_type) }}
+                                    {{ form_errors(b2_payment.deliv_slip_type) }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="box" id="operation_cooldiv_setting_box__body">
+                    <div class="box-header">
+                        <h3 class="box-title">B2クール便区分設定</h3>
+                    </div>
+                    <div class="box-body">
+                        {% for b2_delivery in form.b2_delivery_type %}
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label required">{{ b2_delivery.delivery_name.vars.data }}</label>
+                                <div class="col-sm-4 {% if b2_delivery.vars.errors is not empty %}has-error{% endif %}">
+                                    {{ form_widget(b2_delivery.delivery_id) }}
+                                    {{ form_widget(b2_delivery.delivery_name) }}
+                                    {{ form_widget(b2_delivery.cool_kb) }}
+                                    {{ form_errors(b2_delivery.cool_kb) }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="box" id="operation_sendtime_setting_box__body">
+                    <div class="box-header">
+                        <h3 class="box-title">B2配送時間コード設定</h3>
+                    </div>
+                    <div class="box-body">
+                        {% for b2_delivery in form.b2_delivery_type %}
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label required">{{ b2_delivery.delivery_name.vars.data }}</label>
+                            </div>
+                            <div class="padL09par">
+                                {% if b2_delivery.b2_delivtime_code.vars.data|length > 0 %}
+                                    {% for b2_delivery_time in b2_delivery.b2_delivtime_code %}
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label required">{{ b2_delivery_time.delivery_time.vars.data }}</label>
+                                            <div class="col-sm-3 {% if b2_delivery_time.vars.errors is not empty %}has-error{% endif %}">
+                                                {{ form_widget(b2_delivery_time.delivery_time_id) }}
+                                                {{ form_widget(b2_delivery_time.delivery_time) }}
+                                                {{ form_widget(b2_delivery_time.b2_delivtime_code) }}
+                                                {{ form_errors(b2_delivery_time.b2_delivtime_code) }}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label required">無し</label>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="box" id="operation_sendservice_setting_box__body">
+                    <div class="box-header">
+                        <h3 class="box-title">B2配送サービスコード設定</h3>
+                    </div>
+                    <div class="box-body">
+                        {% for b2_delivery in form.b2_delivery_type %}
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label required">{{ b2_delivery.delivery_name.vars.data }}</label>
+                                <div class="col-sm-4 {% if b2_delivery.vars.errors is not empty %}has-error{% endif %}">
+                                    {{ form_widget(b2_delivery.delivery_id) }}
+                                    {{ form_widget(b2_delivery.delivery_name) }}
+                                    {{ form_widget(b2_delivery.delivery_service_code) }}
+                                    {{ form_errors(b2_delivery.delivery_service_code) }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">B2取込設定</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">取込フォーマット</label>
+                            <div class="col-sm-8 {% if form.use_b2_format.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.use_b2_format) }}
+                                {{ form_errors(form.use_b2_format) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label required ">取込時出荷情報登録API</label>
+                            <div class="col-sm-8 {% if form.shpping_info_regist.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.shpping_info_regist) }}
+                                {{ form_errors(form.shpping_info_regist) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-3" id="aside_column">
+                <div class="col_inner">
+                    <div class="box no-header">
+                        <div class="box-body">
+                            <div class="row text-center">
+                                <div class="col-sm-6 col-sm-offset-3 col-md-12 col-md-offset-0">
+                                    <button id="submit" class="btn btn-primary btn-block btn-lg" type="submit">
+                                        この内容で登録する
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,5 @@
+# .gitignore
+ec/app/log/*
+ec/app/cache/*
+ec/app/config/eccube/*
+ec/app/log/*

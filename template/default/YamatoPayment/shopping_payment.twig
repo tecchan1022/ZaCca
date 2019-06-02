@@ -1,0 +1,37 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+{% extends  'default_frame.twig' %}
+
+{% block main %}
+
+    <h2 class="title">{{ title }}</h2>
+    <div id="payment_box" class="container-fluid">
+        <div id="detail_wrap" class="row">
+            <div id="detail_box__body" class="col-md-10 col-md-offset-1">
+
+                {% if error is not empty %}
+                    <div class="message">
+                        <p class="errormsg bg-danger">
+                            <svg class="cb cb-warning">
+                                <use xlink:href="#cb-warning"></use>
+                            </svg>
+                            {% for error in error %}
+                                {{ error|raw }}
+                            {% endfor %}
+                        </p>
+                    </div>
+                {% endif %}
+
+                <form id="form1" name="form1" method="post" action="{{ url('yamato_shopping_payment') }}">
+                    {{ form_widget(form._token) }}
+                    {% if block_file_path != "" %}
+                        {% include(block_file_path) %}
+                    {% endif %}
+                </form>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div>
+
+{% endblock %}

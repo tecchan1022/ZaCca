@@ -1,0 +1,93 @@
+# 受注管理画面
+admin.order.index.search:
+    - [onAdminOrderIndexSearch, NORMAL]
+Admin/Order/index.twig:
+    - [onAdminOrderIndexRender, NORMAL]
+
+# 受注編集画面
+admin.order.edit.index.initialize:
+    - [onAdminOrderEditIndexInitialize, NORMAL]
+admin.order.edit.index.complete:
+    - [onAdminOrderEditIndexComplete, NORMAL]
+Admin/Order/edit.twig:
+    - [onAdminOrderEditRender, NORMAL]
+eccube.event.route.admin_order_edit.request:
+    - [onRouteAdminOrderEditRequest, NORMAL]
+
+# 受注管理メール通知画面
+admin.order.mail.index.complete:
+    - [onAdminOrderMailIndexComplete, NORMAL]
+Admin/Order/mail_confirm.twig:
+    - [onAdminOrderMailConfirmRender, NORMAL]
+admin.order.mail.mail.all.complete:
+    - [onAdminOrderMailMailAllComplete, NORMAL]
+Admin/Order/mail_all_confirm.twig:
+    - [onAdminOrderMailAllConfirmRender, NORMAL]
+
+# 商品登録画面
+admin.product.edit.complete:
+    - [onAdminProductEditComplete, NORMAL]
+admin.product.copy.complete:
+    - [onAdminProductCopyComplete, NORMAL]
+Admin/Product/product.twig:
+    - [onAdminProductProductRender, NORMAL]
+
+# 支払方法管理画面
+admin.setting.shop.payment.edit.initialize:
+    - [onAdminSettingShopPaymentEditInitialize, NORMAL]
+admin.setting.shop.payment.edit.complete:
+    - [onAdminSettingShopPaymentEditComplete, NORMAL]
+Admin/Setting/Shop/payment_edit.twig:
+    - [onAdminSettingShopPaymentEditRender, NORMAL]
+
+# メール送信
+mail.order:
+    - [onMailOrderRender,NORMAL]
+mail.admin.order:
+    - [onMailAdminOrderRender,NORMAL]
+
+# フロント画面共通
+eccube.event.front.request :
+    - [onFrontRequest, NORMAL]
+
+# マイページ
+eccube.event.render.mypage.before:
+    - [onRenderMypageBefore, NORMAL]
+eccube.event.render.mypage_change.before:
+    - [onRenderMypageBefore, NORMAL]
+eccube.event.render.mypage_change_complete.before:
+    - [onRenderMypageBefore, NORMAL]
+eccube.event.render.mypage_delivery.before:
+    - [onRenderMypageBefore, NORMAL]
+eccube.event.render.mypage_delivery_new.before:
+    - [onRenderMypageBefore, NORMAL]
+eccube.event.render.mypage_delivery_edit.before:
+    - [onRenderMypageBefore, NORMAL]
+eccube.event.render.mypage_favorite.before:
+    - [onRenderMypageBefore, NORMAL]
+eccube.event.render.mypage_history.before:
+    - [onRenderMypageBefore, NORMAL]
+eccube.event.render.mypage_mail_view.before:
+    - [onRenderMypageBefore, NORMAL]
+eccube.event.render.mypage_order.before:
+    - [onRenderMypageBefore, NORMAL]
+eccube.event.render.mypage_withdraw.before:
+    - [onRenderMypageBefore, NORMAL]
+eccube.event.render.yamato_mypage_change_card.before:
+    - [onRenderMypageBefore, NORMAL]
+
+# カート
+eccube.event.route.cart.request:
+    - [onRouteCartRequest, NORMAL]
+
+# 購入フロー
+eccube.event.route.shopping.request:
+    - [onRouteShoppingRequest, NORMAL]
+front.shopping.index.initialize:
+    - [onFrontShoppingIndexInitialize, NORMAL]
+Shopping/index.twig:
+    - [onShoppingIndexRender,NORMAL]
+eccube.event.route.shopping_confirm.request:
+    - [onRouteFrontShoppingConfirmRequest, NORMAL]
+Shopping/complete.twig:
+    - [onShoppingCompleteRender, NORMAL]

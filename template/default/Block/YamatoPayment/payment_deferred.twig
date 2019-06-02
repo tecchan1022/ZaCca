@@ -1,0 +1,35 @@
+{#
+Copyright(c)2016, Yamato Financial Co.,Ltd. All rights reserved.
+Copyright(c)2016, Yamato Credit finance Co.,Ltd. All rights reserved.
+#}
+{% if tpl_payment_onload %}
+    <div id="payment_form_loading">
+        <div class="information">
+            <p>決済処理中です。そのまま、お待ち下さい。</p>
+        </div>
+        <div class="dl_table" style="margin-top: 20px;">
+            <dl>
+                <dd style="text-align: center;">
+                    <img src="{{ app.config.plugin_urlpath }}/yamato_payment/img/loading.gif">
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        document.form1.submit();
+    </script>
+{% else%}
+    <div class="row no-padding" style="margin-bottom: 20px;">
+        <div style="color: #de5d50;">
+            後払い決済の与信を行いましたが、大変申し訳ございません、今回のご注文分に関してはお取引できません。<br/><br/>
+            お手数ですが、下にある「戻る」ボタンで決済画面に戻っていただき、後払い以外の別の決済手段にて再度ご注文いただけますようお願いいたします。
+        </div>
+    </div>
+
+    <div class="row no-padding">
+        <div class="btn_group col-sm-offset-3 col-sm-5">
+            <p><a href="{{ path('yamato_shopping_payment_back') }}" class="btn btn-info btn-block">戻る</a></p>
+        </div>
+    </div>
+{% endif%}

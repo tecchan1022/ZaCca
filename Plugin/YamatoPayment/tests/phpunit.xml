@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
+    bootstrap="./bootstrap.php"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    processIsolation="false"
+    stopOnFailure="false"
+    syntaxCheck="false"
+    >
+
+    <!-- テストの場所 -->
+    <testsuites>
+        <testsuite name="YamatoPayment Test Suite">
+            <directory>./Plugin/YamatoPayment</directory>
+        </testsuite>
+    </testsuites>
+
+    <!-- 出力するログファイル
+    <logging>
+        <log type="coverage-html" target="build/report"/>
+        <log type="coverage-clover" target="build/coverage.xml"/>
+    </logging>
+-->
+    <!-- カバーレージのターゲット -->
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">..</directory>
+            <exclude>
+              <directory suffix=".php">../Entity</directory>
+              <directory suffix=".php">../Resource</directory>
+              <directory suffix=".php">../tests</directory>
+              <file>../PluginManager.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
